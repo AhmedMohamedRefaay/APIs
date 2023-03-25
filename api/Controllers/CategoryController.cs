@@ -56,15 +56,18 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody]Category category)
+        public async Task<IActionResult> CreateCategory([FromBody]CreateCategoryCaommand categor
+          )
         {
             try
-            {
-
+            { 
+                
                 return Ok(await _mediator.Send(new CreateCategoryCaommand
-               (category.Name,
-               category.ParentCategory,
-               category.Image)));
+               (categor.Name,
+               categor.NameArabic,
+                 categor.ParentCategory,
+               categor.image
+               )));
 
 
             }
@@ -82,6 +85,7 @@ namespace api.Controllers
 
                 return Ok(await _mediator.Send(new UpdateCategoryCommand
                (category.Id,
+               category.nameArabic,
                     category.Name,
                category.Image
                 )));

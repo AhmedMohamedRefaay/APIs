@@ -9,7 +9,8 @@ namespace Application.Contracts
 {
     public interface IProductRepository:IRepository<Product,long>
     {
-       
-        Task<IEnumerable<Product>> FilterAsync(string? Name);
+
+        Task<IEnumerable<Product>> FilterAsync(int? categoryId,string? Name, string? ArabicName
+            , int? Discount, float? Morethan, float? Lessthan);
     }
 }

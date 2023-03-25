@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Categories.Queries.GetAllCategories
 {
-    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<MinimalCategoryDetails>>
+    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<MinimalCategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
         public GetAllCategoriesHandler(ICategoryRepository categoryRepository)
@@ -20,11 +20,12 @@ namespace Application.Features.Categories.Queries.GetAllCategories
         }
        
 
-       public async Task<IEnumerable<MinimalCategoryDetails>> Handle (GetAllCategoriesQuery request, CancellationToken cancellationToken)
+       public async Task<IEnumerable<MinimalCategoryDto>> Handle (GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var r = await _categoryRepository.FilterAsync(request.Name);
-                
-           return  r.Select(e => new MinimalCategoryDetails { Id=e.Id,Name=e.Name }).ToList();
+            var r = await _categoryRepository.FilterAsync(request.Name,request.NameArabic);
+             
+           return  r.Select(e=>new MinimalCategoryDto
+           {Name=e.Name ,nameArabic=e.NameArabic,Image=e.Image,Id=e.Id}).ToList();
              
 
         }

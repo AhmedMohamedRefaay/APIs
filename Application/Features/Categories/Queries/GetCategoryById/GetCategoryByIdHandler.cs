@@ -8,6 +8,7 @@ using Application.Contracts;
 using MediatR;
 using ModelDto.CategoryDto;
 using ModelDto;
+using Domain;
 
 namespace Application.Features.Categories.Queries.GetCategoryById
 {
@@ -19,13 +20,29 @@ namespace Application.Features.Categories.Queries.GetCategoryById
 
             _categoryRepository = categoryRepository;
         }
- 
 
-       async Task<MinimalCategoryDetails> IRequestHandler<GetCategoryByIdQuery, MinimalCategoryDetails>.Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
+
+        async Task<MinimalCategoryDetails> IRequestHandler<GetCategoryByIdQuery, MinimalCategoryDetails>.Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            var r =await _categoryRepository.GetByIdAsyc(request.Id);
             
-            return new MinimalCategoryDetails {Name= r.Name,Image= r.Image,Id= r.Id };
+          var  cat = await _categoryRepository.GetByIdAsyc(request.Id);
+
+            Category category = new Category();
+
+            return new MinimalCategoryDetails
+            {
+                Name = cat.Name,
+                nameArabic = cat.NameArabic,
+                Image = cat.Image,
+                Id = cat.Id,
+
+
+            };
+                  
+                
+
+            
+        
 
              
         }

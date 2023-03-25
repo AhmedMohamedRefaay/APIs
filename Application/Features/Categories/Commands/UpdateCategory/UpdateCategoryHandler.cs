@@ -27,6 +27,7 @@ namespace Application.Features.Categories.Commands.UpdateCategory
             {
                
                 categ.Name = request.Name;
+                categ.NameArabic = request.NameArabic;
                 categ.Image = request.Images;
                 categ.ParentCategory = request.ParentCategory;
                 await _categoryRepository.UpdateAsync(categ);

@@ -10,7 +10,7 @@ namespace Application.Contracts
     public interface ICategoryRepository : IRepository<Category,int>
     {
 
-        Task<IEnumerable<Category>> FilterAsync(string? Name);
+        Task<IEnumerable<Category>> FilterAsync(string? Name,string?NameArabic);
 
     }
 }

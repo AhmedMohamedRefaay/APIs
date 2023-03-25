@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ModelDto.CategoryDto;
 using Domain;
 using MediatR;
-
 namespace Application.Features.Categories.Commands.CreateCategory
 {
     public class CreateCategoryCaommand : IRequest<bool>
@@ -14,15 +13,18 @@ namespace Application.Features.Categories.Commands.CreateCategory
 
         public string Name { set; get; }
 
-        public Category ?ParentCategory { set; get; }
+        public string NameArabic { set; get; }
+        public int? ParentCategory { set; get; }
 
-        public Images? image{ set; get; }
+       
+        public string image{ set; get; }
 
-        public CreateCategoryCaommand(string Name,Category ParentCategory,Images images)
+        public CreateCategoryCaommand(string Name,string NameArabic,int? ParentCategory,string image)
         {
+            this.NameArabic = NameArabic;
             this.Name = Name;
             this.ParentCategory = ParentCategory;
-            this.image = images;
+            this.image = image;
         }
 
        

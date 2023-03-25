@@ -19,18 +19,25 @@ namespace Application.Features.Categories.Commands.CreateCategory
             _categoryRepository = categoryRepository;
         }
 
-        
-
         public async Task<bool> Handle(CreateCategoryCaommand request, CancellationToken cancellationToken)
         {
+       
+            Category category=new Category();
+            if (request.ParentCategory!=null)
+           category= await _categoryRepository.GetByIdAsyc((int)request.ParentCategory);
+          
             var min = new Category()
             {
+                NameArabic=request.NameArabic,
                 Name = request.Name,
                 Image = request.image,
-                ParentCategory = request.ParentCategory
+              ParentCategory=category
             };
+
             if (min != null)
             {
+
+            
                 await _categoryRepository.CreateAsync(min);
                 return true;
             }

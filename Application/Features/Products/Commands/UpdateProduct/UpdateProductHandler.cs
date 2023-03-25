@@ -27,9 +27,11 @@ namespace Application.Features.Products.Commands.UpdateProduct
             if(prod != null)
             {
                 prod.Name = request.Name;
-
+                prod.NameArabic = request.NameArabic;
+                prod.DiscriptionArabic = request.DescriptionArabic;
                 prod.Discount = request.Discount;
-                prod.Discription = request.Discription;
+                prod.Discription = request.Description;
+                prod.Price = request.Price;
                 await _productRepository.UpdateAsync(prod);
                 return true;
                 

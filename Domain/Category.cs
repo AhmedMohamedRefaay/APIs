@@ -5,16 +5,17 @@ using System.Text;
 
 namespace Domain
 {
-  
-    public  class Category
+
+    public class Category
     {
-       
+
         public int Id { get; set; }
 
-        [MinLength(3),MaxLength(30)]
+        [MinLength(3), MaxLength(30)]
         public string Name { get; set; }
- 
-        public Category ParentCategory { get; set; }
+
+        public string NameArabic { get; set; }
+        public Category? ParentCategory { get; set; }
 
         private IList<Category> subcategories;
         public IEnumerable<Category> Subcategories { get; set; }
@@ -22,25 +23,27 @@ namespace Domain
         private IList<Product> products;
         public IEnumerable<Product> Products { get { return products; } }
 
-        public Images Image { get; set; }
-        public Category(string name,Images image, Category parentCategory=null)
+        public string Image { get; set; }
+        public Category(string name, string image, string nameArabic, Category? parentCategory = null)
         {
             Name = name;
+            NameArabic = nameArabic;
             Image = image;
             ParentCategory = parentCategory;
-            Subcategories=new List<Category>();
-            products=new List<Product>();
+            Subcategories = new List<Category>();
+            products = new List<Product>();
         }
-        public Category() : this(null,null) { }
-    
+        public Category() { }
+
         public bool AddProduct(Product product)
         {
-            var prod = products.FirstOrDefault(e => e.Name == product.Name);
+            var prod = products.FirstOrDefault(e => (e.Name == product.Name) ||
+            (e.NameArabic == product.NameArabic));
             if (prod == null)
             {
                 products.Add(product);
                 return true;
-            }   
+            }
             else
             {
                 return false;
@@ -51,7 +54,8 @@ namespace Domain
 
         public bool AddSubCategory(Category category)
         {
-            var sub = subcategories.FirstOrDefault(e => e.Name == category.Name);
+            var sub = subcategories.FirstOrDefault(e => (e.Name == category.Name)
+            ||(e.NameArabic==category.NameArabic));
             if (sub == null)
             {
                 subcategories.Add(category);
@@ -64,5 +68,7 @@ namespace Domain
             }
 
         }
+
+         
     }
 }

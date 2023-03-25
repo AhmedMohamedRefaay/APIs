@@ -10,13 +10,15 @@ namespace Application.Features.Categories.Commands.UpdateCategory
     public class UpdateCategoryCommand : IRequest<bool>
     {
         public int Id { get; set; }
-        public string? Name { set; get; }
+        public string Name { set; get; }
 
-        public Images? Images { set; get; }
+        public string NameArabic { set; get; }
+        public string? Images { set; get; }
         public Category? ParentCategory { set; get; }
-        public UpdateCategoryCommand(int id, string? name, Images? images)
+        public UpdateCategoryCommand(int id, string name,string nameArabic, string? images)
         {
             Id = id;
+            NameArabic = nameArabic;
             Name = name;
             Images = images;
             

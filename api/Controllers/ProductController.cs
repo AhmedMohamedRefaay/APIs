@@ -23,7 +23,7 @@ namespace api.Controllers
         }
 
 
-     [Authorize]
+     
         public async Task<IActionResult> GetAllProduct([FromQuery] GetAllProductsQuery query)
         {
             try
@@ -39,13 +39,13 @@ namespace api.Controllers
 
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductyById(long id)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetProductyById(long Id)
         {
             try
             {
 
-                return Ok(await _mediator.Send(new GetProductByIdQuery() { Id = id }));
+                return Ok(await _mediator.Send(new GetProductByIdQuery() { Id = Id }));
 
 
             }
@@ -57,16 +57,22 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] Product product )
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCaommand product )
         {
             try
             {
 
                 return Ok(await _mediator.Send(new CreateProductCaommand
                (product.Name,
+               product.NameArabic,
+               product.DescriptionArabic,
                product.Discount,
-               product.Discription))); ;
-
+               product.Description,
+               product.CategoryId,
+               product.Image,
+               product.AvailUnit,
+               product.Price))); ;
+                
 
             }
             catch (Exception e)
@@ -76,17 +82,23 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProduct([FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand product)
         {
             try
             {
 
                 return Ok(await _mediator.Send(new UpdateProductCommand
                (
-              product.Id,
+               product.Id,
                product.Name,
-               product.Discription,
-               product.Discount
+               product.NameArabic,
+               product.DescriptionArabic,
+               product.Discount,
+               product.Description,
+               product.Image,
+               product.Price
+
+
             ))); 
 
 

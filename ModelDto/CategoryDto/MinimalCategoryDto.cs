@@ -8,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace ModelDto.CategoryDto
 {
-    public class MinimalProductDto
+    public class MinimalCategoryDto
     {
         
         public int Id { get; set; }
         [MinLength(3), MaxLength(10)]
-        public string ?Name { get; set; }
+        public string Name { get; set; }
+    
+        public string nameArabic { set; get; }
+        public string? Image { get; set; }
 
-       
     }
 }
  

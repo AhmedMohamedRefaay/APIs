@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using Domain;
 namespace ModelDto.CategoryDto
 {
-    public class MinimalCategoryDetails : MinimalProductDto
+    public class MinimalCategoryDetails : MinimalCategoryDto
     {
-        public Category ?parentCategory { get; set; }
+        public int ?parentCategory { get; set; }
 
+        public Category? Parent { set; get; }
         public IEnumerable<Category> ?Subcategories { set; get; }
-        public Images ?Image { get; set; }
+    
     }
 }

@@ -10,16 +10,18 @@ using Application.Features.Products.Queries.GetProductById;
 using MediatR;
 using ModelDto.CategoryDto;
 using ModelDto.ProductDto;
-
+using Domain;
 namespace Application.Features.Products.Queries.GetProductById
 {
     public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, MinimalProductDetails>
     {
         private readonly IProductRepository _productRepository;
-        public GetProductByIdHandler(IProductRepository productRepository)
+       
+        public GetProductByIdHandler(IProductRepository productRepository )
         {
 
             _productRepository = productRepository;
+            
         }
 
         
@@ -27,10 +29,21 @@ namespace Application.Features.Products.Queries.GetProductById
         async Task<MinimalProductDetails> IRequestHandler<GetProductByIdQuery, MinimalProductDetails>.Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             var r = await _productRepository.GetByIdAsyc(request.Id);
-            
-            return new MinimalProductDetails { Name = r.Name, Discription = r.Discription,
-                Discount = r.Discount
-                //CategoryId = r.Categories.FirstOrDefault(e => e.Id == r.Id).Id
+             
+            return new MinimalProductDetails 
+            {
+
+                Name = r.Name,
+                NameArabic=r.NameArabic
+                ,Discription = r.Discription,
+                DiscArabic=r.DiscriptionArabic,
+                Discount = r.Discount,
+                CategoryId=r.category.Id,
+                Image=r.Image,
+                AvailUnit=r.AvailUnit,
+                Price=r.Price,
+                
+             
             };
         }
     }

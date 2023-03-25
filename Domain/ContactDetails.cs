@@ -7,6 +7,7 @@ namespace Domain
 {
    public class ContactDetails
     {
+        public int Id { get; set; }
         public int AddressId { get; set; }
 
         public string Street { get; set; }

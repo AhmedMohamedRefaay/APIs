@@ -8,8 +8,9 @@ using ModelDto.CategoryDto;
 
 namespace Application.Features.Categories.Queries.GetAllCategories
 {
-    public class GetAllCategoriesQuery : IRequest<IEnumerable<MinimalCategoryDetails>>
+    public class GetAllCategoriesQuery : IRequest<IEnumerable<MinimalCategoryDto>>
     {
       public  string ? Name { set; get; }
+        public string? NameArabic { set; get; }
     }
 }

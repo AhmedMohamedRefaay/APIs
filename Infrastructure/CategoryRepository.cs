@@ -18,12 +18,16 @@ namespace Infrastructure
 
 
         }
-
-
-
-        public async Task<IEnumerable<Category>> FilterAsync(string? Name)
+        public async Task<IEnumerable<Category>> FilterAsync(string? Name, string? NameArabic)
         {
-            return await _context.Categories.ToListAsync();
+
+            var query =await _context.Categories.ToListAsync();
+            if (Name != null)
+                query = query.Where(e => e.Name == Name).ToList();
+            else if(NameArabic!=null)
+                query = query.Where(e => e.NameArabic == NameArabic).ToList();
+
+            return query;
         }
  
     }

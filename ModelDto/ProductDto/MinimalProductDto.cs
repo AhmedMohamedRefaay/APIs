@@ -13,7 +13,7 @@ namespace ModelDto.ProductDto
 
         public long Id { get; set; }
         public int? Discount { get; set; }
-        public string Image { get; set; }
+        public byte[] Images { get; set; }
 
 
         [MinLength(3), MaxLength(10)]

@@ -24,7 +24,9 @@ namespace Application.Features.Products.Commands.UpdateProduct
         public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var prod=await _productRepository.GetByIdAsyc(request.Id);
-            if(prod != null)
+            using var datastream = new MemoryStream();
+            await request.Images.CopyToAsync(datastream);
+            if (prod != null)
             {
                 prod.Name = request.Name;
                 prod.NameArabic = request.NameArabic;
@@ -32,6 +34,7 @@ namespace Application.Features.Products.Commands.UpdateProduct
                 prod.Discount = request.Discount;
                 prod.Discription = request.Description;
                 prod.Price = request.Price;
+                prod.Images = datastream.ToArray();
                 await _productRepository.UpdateAsync(prod);
                 return true;
                 

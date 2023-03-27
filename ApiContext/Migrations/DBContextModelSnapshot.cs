@@ -30,8 +30,8 @@ namespace ApiContext.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Images")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(30)
@@ -104,8 +104,8 @@ namespace ApiContext.Migrations
                     b.Property<string>("DiscriptionArabic")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Images")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(20)

@@ -23,12 +23,14 @@ namespace Application.Features.Categories.Commands.UpdateCategory
         public async Task<bool> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var categ=await _categoryRepository.GetByIdAsyc(request.Id);
-            if(categ!=null)
+            using var datastream = new MemoryStream();
+            await request.Images.CopyToAsync(datastream);
+            if (categ!=null)
             {
                
                 categ.Name = request.Name;
                 categ.NameArabic = request.NameArabic;
-                categ.Image = request.Images;
+                categ.Images = datastream.ToArray();
                 categ.ParentCategory = request.ParentCategory;
                 await _categoryRepository.UpdateAsync(categ);
                 return true;

@@ -56,7 +56,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody]CreateCategoryCaommand categor
+        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryCaommand categor
           )
         {
             try
@@ -65,8 +65,9 @@ namespace api.Controllers
                 return Ok(await _mediator.Send(new CreateCategoryCaommand
                (categor.Name,
                categor.NameArabic,
-                 categor.ParentCategory,
-               categor.image
+                 
+               categor.Images,
+               categor.ParentCategory
                )));
 
 
@@ -78,16 +79,16 @@ namespace api.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> UpdateCategory([FromBody] MinimalCategoryDetails category)
+        public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryCommand category)
         {
             try
             {
 
                 return Ok(await _mediator.Send(new UpdateCategoryCommand
                (category.Id,
-               category.nameArabic,
+               category.NameArabic,
                     category.Name,
-               category.Image
+               category.Images
                 )));
  
 

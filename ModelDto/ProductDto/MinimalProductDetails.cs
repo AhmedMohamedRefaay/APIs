@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain;
+using Microsoft.AspNetCore.Http;
+
 namespace ModelDto.ProductDto
 {
     public class MinimalProductDetails
@@ -14,7 +16,7 @@ namespace ModelDto.ProductDto
         public int? Discount { get; set; }
        
         public int AvailUnit { set; get; }
-        public string Image { get; set; }
+        public byte[] Images { get; set; }
 
       
         [MinLength(3), MaxLength(10)]

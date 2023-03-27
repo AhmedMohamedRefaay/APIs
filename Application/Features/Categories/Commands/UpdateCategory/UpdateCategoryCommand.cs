@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 using Domain;
+using Microsoft.AspNetCore.Http;
+
 namespace Application.Features.Categories.Commands.UpdateCategory
 {
     public class UpdateCategoryCommand : IRequest<bool>
@@ -13,17 +15,17 @@ namespace Application.Features.Categories.Commands.UpdateCategory
         public string Name { set; get; }
 
         public string NameArabic { set; get; }
-        public string? Images { set; get; }
+        public IFormFile Images { set; get; }
         public Category? ParentCategory { set; get; }
-        public UpdateCategoryCommand(int id, string name,string nameArabic, string? images)
+        public UpdateCategoryCommand(int Id, string Name,string NameArabic, IFormFile Images)
         {
-            Id = id;
-            NameArabic = nameArabic;
-            Name = name;
-            Images = images;
+            this.Id = Id;
+            this.NameArabic = NameArabic;
+            this.Name = Name;
+            this.Images= Images;
             
         }
-
+        public UpdateCategoryCommand() { }
         
 
        

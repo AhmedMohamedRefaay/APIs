@@ -25,12 +25,14 @@ namespace Application.Features.Categories.Commands.CreateCategory
             Category category=new Category();
             if (request.ParentCategory!=null)
            category= await _categoryRepository.GetByIdAsyc((int)request.ParentCategory);
-          
+
+            using var datastream = new MemoryStream();
+            await request.Images.CopyToAsync(datastream);
             var min = new Category()
             {
                 NameArabic=request.NameArabic,
                 Name = request.Name,
-                Image = request.image,
+                Images = datastream.ToArray(),
               ParentCategory=category
             };
 

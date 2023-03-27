@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,7 @@ namespace ModelDto.CategoryDto
         public string Name { get; set; }
     
         public string nameArabic { set; get; }
-        public string? Image { get; set; }
+        public byte[]? Images { get; set; }
 
     }
 }

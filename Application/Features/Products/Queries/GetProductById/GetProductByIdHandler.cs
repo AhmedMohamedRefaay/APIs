@@ -39,7 +39,7 @@ namespace Application.Features.Products.Queries.GetProductById
                 DiscArabic=r.DiscriptionArabic,
                 Discount = r.Discount,
                 CategoryId=r.category.Id,
-                Image=r.Image,
+                Images=r.Images,
                 AvailUnit=r.AvailUnit,
                 Price=r.Price,
                 

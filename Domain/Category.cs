@@ -23,12 +23,14 @@ namespace Domain
         private IList<Product> products;
         public IEnumerable<Product> Products { get { return products; } }
 
-        public string Image { get; set; }
-        public Category(string name, string image, string nameArabic, Category? parentCategory = null)
+        public byte[] Images { get; set; }
+      
+        public Category(string name, byte[] images, string nameArabic, 
+            Category? parentCategory = null)
         {
             Name = name;
             NameArabic = nameArabic;
-            Image = image;
+            Images = images;
             ParentCategory = parentCategory;
             Subcategories = new List<Category>();
             products = new List<Product>();

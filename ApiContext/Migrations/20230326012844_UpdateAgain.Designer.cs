@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiContext.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20230325123516_AddingPriceToProduct")]
-    partial class AddingPriceToProduct
+    [Migration("20230326012844_UpdateAgain")]
+    partial class UpdateAgain
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,8 @@ namespace ApiContext.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Images")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(30)
@@ -107,8 +107,8 @@ namespace ApiContext.Migrations
                     b.Property<string>("DiscriptionArabic")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("Images")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(20)

@@ -33,7 +33,7 @@ namespace Application.Features.Categories.Queries.GetCategoryById
             {
                 Name = cat.Name,
                 nameArabic = cat.NameArabic,
-                Image = cat.Image,
+                Images = cat.Images,
                 Id = cat.Id,
 
 

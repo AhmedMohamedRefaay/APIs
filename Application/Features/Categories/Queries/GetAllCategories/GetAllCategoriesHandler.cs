@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Categories.Queries.GetAllCategories
 {
@@ -23,9 +24,9 @@ namespace Application.Features.Categories.Queries.GetAllCategories
        public async Task<IEnumerable<MinimalCategoryDto>> Handle (GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
             var r = await _categoryRepository.FilterAsync(request.Name,request.NameArabic);
-             
-           return  r.Select(e=>new MinimalCategoryDto
-           {Name=e.Name ,nameArabic=e.NameArabic,Image=e.Image,Id=e.Id}).ToList();
+          
+            return  r.Select(e=>new MinimalCategoryDto
+           {Name=e.Name ,nameArabic=e.NameArabic,Images=e.Images,Id=e.Id}).ToList();
              
 
         }

@@ -33,7 +33,7 @@ namespace Application.Features.Products.Queries.GetAllQuery
                DiscArabic=e.DiscriptionArabic,
                Discount=e.Discount,
                Discription=e.Discription,
-               Image=e.Image,
+               Images=e.Images,
              Price=e.Price
              
                

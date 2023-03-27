@@ -23,10 +23,12 @@ namespace Domain
         public float Price { set; get; }
         public int ?Discount { get; set; }
         public int AvailUnit { get; set; }       
-        public string Image { set; get; }
+        public byte[] Images { set; get; }
+
+       
         public  Category category { get;set; }
         public Product(  string name,string nameArabic,string DiscAraibc,
-            string discription, int? discount,float Price)
+            string discription, int? discount,float Price, byte[]Images)
         {
             
             Name = name;
@@ -35,7 +37,7 @@ namespace Domain
             Discription = discription;
             Discount = discount;
             this.Price = Price;
-
+            this.Images=Images;
         }
 
         public Product() { }

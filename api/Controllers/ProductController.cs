@@ -57,7 +57,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCaommand product )
+        public async Task<IActionResult> CreateProduct([FromForm] CreateProductCaommand product )
         {
             try
             {
@@ -69,7 +69,7 @@ namespace api.Controllers
                product.Discount,
                product.Description,
                product.CategoryId,
-               product.Image,
+               product.Images,
                product.AvailUnit,
                product.Price))); ;
                 
@@ -81,8 +81,8 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand product)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductCommand product)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace api.Controllers
                product.DescriptionArabic,
                product.Discount,
                product.Description,
-               product.Image,
+               product.Images,
                product.Price
 
 

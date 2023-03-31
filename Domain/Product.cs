@@ -17,6 +17,7 @@ namespace Domain
         public string NameArabic { set; get; }
         public string Discription  { get; set; }
 
+        public Order order { set; get; }
         public string DiscriptionArabic { get; set; }
         [Range(0,100)]
 
@@ -25,7 +26,7 @@ namespace Domain
         public int AvailUnit { get; set; }       
         public byte[] Images { set; get; }
 
-       
+       public string ImagePath { set; get; }
         public  Category category { get;set; }
         public Product(  string name,string nameArabic,string DiscAraibc,
             string discription, int? discount,float Price, byte[]Images)
@@ -42,27 +43,12 @@ namespace Domain
 
         public Product() { }
      
-
-        private readonly IList<Order> orders;
-         public IEnumerable< Order> order { get { return orders; } }
-
-
-        public void AddToOrder(Order order)
-        {
-            orders.Add(order);
-        }
-         
-        //public Seller seller { get; set; }
-
-    
-
-        //public IEnumerable<Review> reviews { set; get; }
-        //public WishList wishList { get; set; }
-
-        //Relation between it and shoppingcard ???????????????
+ 
+        
 
 
-        // public ShoppingCart shoppingCart { get; set; }
+       
+        
 
 
 

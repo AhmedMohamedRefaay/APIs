@@ -17,7 +17,7 @@ namespace Application.Features.Products.Queries.GetAllQuery
         public float? Morethan { set; get; }
         public float? Lessthan { set; get; }
       
-
+        public string? Lang { set; get; }
         public int? CategoryId { set; get; }
  
     }

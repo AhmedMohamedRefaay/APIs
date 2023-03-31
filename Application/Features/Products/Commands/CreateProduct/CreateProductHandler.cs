@@ -27,8 +27,7 @@ namespace Application.Features.Products.Commands.CreateProduct
         public async Task<bool> Handle(CreateProductCaommand request, CancellationToken cancellationToken)
         {
             Category category = await _categoryRepository.GetByIdAsyc(request.CategoryId);
-            using var datastream = new MemoryStream();
-            await request.Images.CopyToAsync(datastream);
+            
             var min = new Product()
             {
                 Name = request.Name,
@@ -38,7 +37,7 @@ namespace Application.Features.Products.Commands.CreateProduct
                 Discount= request.Discount,
                category=category,
                Price=request.Price,
-               Images= datastream.ToArray()
+               ImagePath=request.ImagePath
 
             };
             if (min != null)

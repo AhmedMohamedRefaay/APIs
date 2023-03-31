@@ -16,10 +16,11 @@ namespace api.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IMediator _mediator;
-         
-        public ProductController(IMediator mediator )
+        private readonly IWebHostEnvironment _env;
+        public ProductController(IMediator mediator, IWebHostEnvironment env)
         {
             _mediator = mediator;
+            _env = env;
         }
 
 
@@ -61,7 +62,22 @@ namespace api.Controllers
         {
             try
             {
+                var file = product.file;
+                if (file == null || file.Length == 0)
+                    return BadRequest("Please select an image");
+                //var imagesDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+                //if (!Directory.Exists(imagesDirectoryPath))
+                //    Directory.CreateDirectory(imagesDirectoryPath);
 
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                 if(file!=null)
+                product.ImagePath = filePath;
                 return Ok(await _mediator.Send(new CreateProductCaommand
                (product.Name,
                product.NameArabic,
@@ -69,11 +85,10 @@ namespace api.Controllers
                product.Discount,
                product.Description,
                product.CategoryId,
-               product.Images,
+               product.ImagePath,
                product.AvailUnit,
-               product.Price))); ;
+               product.Price))); 
                 
-
             }
             catch (Exception e)
             {

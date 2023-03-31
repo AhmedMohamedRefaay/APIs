@@ -5,55 +5,83 @@ using System.Text;
 
 namespace Domain
 {
-   public class Order
+    public enum OrderStatus
     {
-        public int Id { get; set; }
-        public float TotalPrice { get; set; }
+        Delivered = 1,
+        Shipped = 2,
+        Canceled = 3
+    }
+    public class Order
+    {
+        public int Id { get; private set; }
 
-        public DateTime DateOrder { get; set; }
+        public DateTime? DateOrder { get; set; }
 
-        public bool OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
-        public DateTime DeliveryDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
 
-        public float ShippingPrice { get; set; }
+        [ForeignKey("User")]
+        public int? UserID { get; set; }
+        public float? ShippingPrice { get; set; }
 
-        public float Tax { get; set; }
+        public float? Tax { get; set; }
+        public virtual User? User { get; set; }
+        public virtual ICollection<OrderItem>? Order_Items { get; set; }
+        private readonly IList<Product> products;
 
-        public int Quantity { get; set; }
+        public IEnumerable<Product> Products
+        {
+            set
+            {
+                Products = value;
+            }
 
-        private readonly IList<Product> Products;
-
+            get
+            {
+                return products;
+            }
+        }
         public Order() { }
-        public Order
-            (float totalPrice, DateTime dateOrder, bool orderStatus,
-            DateTime deliveryDate, float shippingPrice, float tax, int quantity)
+        public Order(IEnumerable<Product> products, string orderStatus, DateTime? dateOrder = null, DateTime? deliveryDate = null, float? shippingPrice = null, float? tax = null)
         {
-            TotalPrice = totalPrice;
-            DateOrder = dateOrder;
-            OrderStatus = orderStatus;
-            DeliveryDate = deliveryDate;
-            ShippingPrice = shippingPrice;
-            Tax = tax;
-            Quantity = quantity;
-            Products =new List<Product>();
-        }
-
-        public IEnumerable<Product> products { get { return Products; } }
-
-       
-        public void AddProduct(Product product)
-        {
-            Products.Add(product);
+            Products = products;
 
 
         }
-        //public Card card { get; set; }
 
-        
-        //public ContactDetails contactDetails { get; set;}
+        public Order(IEnumerable<Product> products)
+        {
+            Products = products;
 
-       
-        //public Buyer buyer { get; set; }
+
+        }
+
+
+        public bool AddProducts(Product product)
+        {
+            var availableproduct = products.FirstOrDefault(a => a.Id == product.Id);
+            if (availableproduct == null)
+            {
+                products.Add(product);
+                return true;
+            }
+            else { return false; }
+        }
+ 
+        public bool Removefromproducts(Product product)
+        {
+            var availableproduct = products.FirstOrDefault(a => a.Name == product.Name);
+            if (availableproduct == null)
+            {
+                return false;
+            }
+            else
+            {
+                products.Remove(product);
+                return true;
+
+            }
+        }
     }
 }

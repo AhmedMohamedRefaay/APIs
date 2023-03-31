@@ -4,6 +4,7 @@ using ApiContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiContext.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20230328150413_lastversion")]
+    partial class lastversion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,19 +61,25 @@ namespace ApiContext.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("DateOrder")
+                    b.Property<DateTime>("DateOrder")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeliveryDate")
+                    b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderStatus")
+                    b.Property<bool>("OrderStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<float?>("ShippingPrice")
+                    b.Property<float>("ShippingPrice")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Tax")
+                    b.Property<float>("Tax")
+                        .HasColumnType("real");
+
+                    b.Property<float>("TotalPrice")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -98,9 +107,6 @@ namespace ApiContext.Migrations
                     b.Property<string>("DiscriptionArabic")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("Images")
                         .HasColumnType("varbinary(max)");
 
@@ -117,14 +123,9 @@ namespace ApiContext.Migrations
                     b.Property<int?>("categoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("orderId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("categoryId");
-
-                    b.HasIndex("orderId");
 
                     b.ToTable("Products");
                 });
@@ -327,6 +328,21 @@ namespace ApiContext.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("OrderProduct", b =>
+                {
+                    b.Property<int>("orderId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("productsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("orderId", "productsId");
+
+                    b.HasIndex("productsId");
+
+                    b.ToTable("OrderProduct");
+                });
+
             modelBuilder.Entity("Domain.Category", b =>
                 {
                     b.HasOne("Domain.Category", "ParentCategory")
@@ -343,13 +359,7 @@ namespace ApiContext.Migrations
                         .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Domain.Order", "order")
-                        .WithMany("Products")
-                        .HasForeignKey("orderId");
-
                     b.Navigation("category");
-
-                    b.Navigation("order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -403,16 +413,26 @@ namespace ApiContext.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OrderProduct", b =>
+                {
+                    b.HasOne("Domain.Order", null)
+                        .WithMany()
+                        .HasForeignKey("orderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Product", null)
+                        .WithMany()
+                        .HasForeignKey("productsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Category", b =>
                 {
                     b.Navigation("Products");
 
                     b.Navigation("Subcategories");
-                });
-
-            modelBuilder.Entity("Domain.Order", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

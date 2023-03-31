@@ -16,8 +16,8 @@ namespace ModelDto.ProductDto
         public int? Discount { get; set; }
        
         public int AvailUnit { set; get; }
-        public byte[] Images { get; set; }
-
+        
+        public string ImagesPath { get; set; }
       
         [MinLength(3), MaxLength(10)]
         public string Name { get; set; }

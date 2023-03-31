@@ -16,7 +16,7 @@ namespace Application.Features.Products.Commands.CreateProduct
         public string Name { set; get; }
 
         public string NameArabic { set; get; }
-        public IFormFile Images { set; get; }
+        public string? ImagePath { set; get; }
 
         public int? Discount { set; get; }
         public   string Description { set; get; }
@@ -24,10 +24,10 @@ namespace Application.Features.Products.Commands.CreateProduct
         public int AvailUnit { set; get; }
         public string DescriptionArabic { set; get; }
         public  int CategoryId { set; get; }
-
+        public IFormFile file { set; get; }
         public float Price { set; get; }
        public CreateProductCaommand(string Name,string NameArabic, string DescriptionArabic,
-           int? Discount, string Description, int CategoryId, IFormFile Images,int AvailUnit,float Price)
+           int? Discount, string Description, int CategoryId, string? ImagePath, int AvailUnit,float Price)
         {
            this.Name = Name;
             this.NameArabic = NameArabic;
@@ -35,7 +35,7 @@ namespace Application.Features.Products.Commands.CreateProduct
             this.Discount = Discount;
             this.Description = Description;
             this.CategoryId = CategoryId;
-            this.Images = Images;
+            this.ImagePath = ImagePath;
             this.Price = Price;
         }
 

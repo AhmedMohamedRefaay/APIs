@@ -20,9 +20,13 @@ namespace ApiContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Product>().HasOne(c => c.category).
-             WithMany(w => w.Products).OnDelete(DeleteBehavior.Cascade);
-       
+            modelBuilder.Entity<Category>()
+       .HasMany<Product>(g => g.Products)
+       .WithOne(s => s.category)
+        
+       .OnDelete(DeleteBehavior.Cascade);
+
+
 
         }
         public DbSet<Category> Categories { get; set; }

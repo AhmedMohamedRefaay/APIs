@@ -6,7 +6,7 @@ namespace AdminDashBoard.ViewModel
 
         public long Id { get; set; }
         public int? Discount { get; set; }
-        public byte[] Images { get; set; }
+        public string  ImagePath { get; set; }
 
 
        
@@ -19,5 +19,7 @@ namespace AdminDashBoard.ViewModel
         public string DiscArabic { set; get; }
 
         public float Price { get; set; }
+
+        
     }
 }

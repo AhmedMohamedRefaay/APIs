@@ -20,19 +20,18 @@ namespace Infrastructure
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            
-            
-                var Orders = await _context.Orders.Include(p=>p.Products).ToListAsync();
-              
-           
-                return Orders;
-            
-        }
 
-        //public async Task<Order?> GetByIdAsyc(int id)
-        //{
-        //    return await _context.Orders.Include(e=>e.Products).SingleOrDefaultAsync(a=>a.Id==id);
-        //}
+
+            return _context.Orders.ToList();
+
+        }
+        public List<Order> GetAllByUserID(int UserID)
+        {
+            return _context.Orders.Include(d => d.Order_Items).ThenInclude(i => i.Product).Where(o => o.UserID == UserID).ToList();
+        }
+        
+
+        
 
 
     }

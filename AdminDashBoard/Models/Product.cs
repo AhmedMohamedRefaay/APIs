@@ -18,6 +18,7 @@ namespace AdminDashBoard.Models
         [Required]
         public string Description { set; get; }
 
+      
         [Required]
         public int AvailUnit { set; get; }
         [Required]

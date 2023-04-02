@@ -8,14 +8,14 @@ namespace Domain
 {
     public class OrderItem
     {
-        public int ID { get; set; }
+        public int Id{ get; set; }
         public int Quantity { get; set; }
 
 
         [ForeignKey("Order")]
         public int? OrderID { get; set; }
         [ForeignKey("Product")]
-        public int? ProductID { get; set; }
+        public long? ProductID { get; set; }
 
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

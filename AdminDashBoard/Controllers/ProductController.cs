@@ -6,7 +6,7 @@ using AdminDashBoard.ViewModel;
 using Microsoft.AspNetCore.Http;
 using ApiContext;
 using Domain;
-using Microsoft.EntityFrameworkCore;
+ 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AdminDashBoard.Controllers
@@ -208,7 +208,7 @@ namespace AdminDashBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(Models.Product updatedProduct)
         {
-            var product =await dBContext.Products.FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
+            var product = dBContext.Products.FirstOrDefault(p => p.Id == updatedProduct.Id);
 
             if (product == null)
             {

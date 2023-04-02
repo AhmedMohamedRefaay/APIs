@@ -26,6 +26,7 @@ namespace Domain
         public int AvailUnit { get; set; }       
         public byte[] Images { set; get; }
 
+        public OrderItem OrderItem { set; get; }
        public string ImagePath { set; get; }
         public  Category category { get;set; }
         public Product(  string name,string nameArabic,string DiscAraibc,

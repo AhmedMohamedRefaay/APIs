@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace Application.Contracts
 {
-    public interface IOrderRepository:IRepository<Order,int>
+    public interface IOrderRepository
     {
-        Task<IEnumerable<Order>> GetAllOrdersAsync();      
+        Task<List<Order>> GetAll();
+        Task<List<Order>> GetAllByUserID(int UserID);
+        Task<Order> Get(int Id);
+        void Create(Order Order_Details);
+        void Update(int Id, Order Order_Details);
+        Task Delete(int Id);
+
     }
 }

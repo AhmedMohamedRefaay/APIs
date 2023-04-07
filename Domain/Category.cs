@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain
@@ -13,29 +14,22 @@ namespace Domain
 
         [MinLength(3), MaxLength(30)]
         public string Name { get; set; }
-
         public string NameArabic { get; set; }
+        [ForeignKey("ParentCategory")]
+        public int? parentId { get; set; }
         public Category? ParentCategory { get; set; }
-
-        private IList<Category> subcategories;
-        public IEnumerable<Category> Subcategories { get; set; }
+        private IList<Category> ?subcategories;
+        public IEnumerable<Category> ?Subcategories { get; set; }
 
         private IList<Product> products;
         public IEnumerable<Product> Products { get { return products; } }
+        [Required]
+        
+       
+        public string ImagePath{set; get;}
 
-        public byte[] Images { get; set; }
-      
-        public Category(string name, byte[] images, string nameArabic, 
-            Category? parentCategory = null)
-        {
-            Name = name;
-            NameArabic = nameArabic;
-            Images = images;
-            ParentCategory = parentCategory;
-            Subcategories = new List<Category>();
-            products = new List<Product>();
-        }
         public Category() { }
+
 
         public bool AddProduct(Product product)
         {

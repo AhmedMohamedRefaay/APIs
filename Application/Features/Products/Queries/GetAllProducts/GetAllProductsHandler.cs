@@ -34,7 +34,7 @@ namespace Application.Features.Products.Queries.GetAllQuery
                Discount=e.Discount,
                Name = e.Name,
                ImagePath =e.ImagePath,
-             Price=e.Price,
+               Price=e.Price,
                     Discription = e.Discription,
                
            });

@@ -15,8 +15,8 @@ namespace Application.Features.Products.Commands.UpdateProduct
         public string Name { set; get; }
 
         public string NameArabic { set; get; }
-        public IFormFile Images { set; get; }
-
+        public IFormFile file { set; get; }
+        public int CategoryId { set; get; }
         public int? Discount { set; get; }
         public string Description { set; get; }
 
@@ -24,7 +24,7 @@ namespace Application.Features.Products.Commands.UpdateProduct
         
         public float Price { set; get; }
         public UpdateProductCommand(long Id,string Name, string NameArabic, string DescriptionArabic,
-            int? Discount, string Description, IFormFile Images,float Price)
+            int? Discount, string Description, IFormFile file, float Price,int CategoryId)
         {
             this.Id = Id;
             this.Name = Name;
@@ -32,8 +32,9 @@ namespace Application.Features.Products.Commands.UpdateProduct
             this.DescriptionArabic = DescriptionArabic;
             this.Discount = Discount;
             this.Description = Description;
-            this.Images = Images;
+            this.file = file;
             this.Price = Price;
+            this.CategoryId = CategoryId;
 
         }
         public UpdateProductCommand() { }

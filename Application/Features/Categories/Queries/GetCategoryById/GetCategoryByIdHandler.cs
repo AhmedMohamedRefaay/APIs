@@ -27,15 +27,15 @@ namespace Application.Features.Categories.Queries.GetCategoryById
             
           var  cat = await _categoryRepository.GetByIdAsyc(request.Id);
 
-            Category category = new Category();
+           
 
             return new MinimalCategoryDetails
             {
                 Name = cat.Name,
                 nameArabic = cat.NameArabic,
-                Images = cat.Images,
+                ImagePath = cat.ImagePath,
                 Id = cat.Id,
-
+                Subcategories=cat.Subcategories
 
             };
                   

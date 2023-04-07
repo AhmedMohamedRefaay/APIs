@@ -6,7 +6,7 @@ using AdminDashBoard.ViewModel;
 using Microsoft.AspNetCore.Http;
 using ApiContext;
 using Domain;
- 
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AdminDashBoard.Controllers
@@ -15,7 +15,7 @@ namespace AdminDashBoard.Controllers
     {
         private readonly DBContext dBContext;
         private readonly IWebHostEnvironment _env;
-        public ProductController( DBContext _dBContext, IWebHostEnvironment env)
+        public ProductController(DBContext _dBContext, IWebHostEnvironment env)
         {
             dBContext = _dBContext;
             _env = env;
@@ -24,45 +24,46 @@ namespace AdminDashBoard.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult>Index(string Lang, int? CategoryId, string? Name, string? ArabicName
-            , int? Discount, float? Morethan, float? Lessthan)
+        public async Task<IActionResult> Index()//string Lang, int? CategoryId, string? Name, string? ArabicName
+        //    , int? Discount, float? Morethan, float? Lessthan
         {
-            var apiUrl = $"http://localhost:5000/api/Product/GetAllProduct";
-            
-            var queryString = $"?Lang={Lang}&ArabicName={ArabicName}&Name={Name}&CategoryId={CategoryId}" +
-                $"&Discount={Discount}&MoreThan={Morethan}&LessThan={Lessthan}";
-            var response = await _httpClient.GetAsync(apiUrl + queryString);
-            //var response = await _httpClient.GetAsync(apiUrl);
-           
-            if (response.IsSuccessStatusCode)
+            if (User.Identity.IsAuthenticated == true)
             {
-                var jsonContent = await response.Content.ReadAsStringAsync();
-                var data = JsonConvert.DeserializeObject<List<GetAllProduct>>(jsonContent);
-   
-                return View(data);
-                
-            }
-            else
-            {
-                return BadRequest("sorry for this happen");
+                ViewBag.name = User.Identity.Name;
             }
 
-         
+            var data = dBContext.Products.Select(a => new GetAllProduct
+            {
+                Id = a.Id,
+                Name = a.Name,
+                NameArabic = a.NameArabic,
+                ImagePath = a.ImagePath,
+                Price=a.Price,
+                DiscArabic=a.DiscriptionArabic,
+                Discription=a.Discription,
+                Discount=a.Discount
+            });
+            return View(data);
+
         }
         [HttpGet]
         public async Task<IActionResult> Details(long Id)
         {
+            if (User.Identity.IsAuthenticated == true)
+            {
+                ViewBag.name = User.Identity.Name;
+            }
             //var apiUrl = $"http://localhost:5000/api/Product/GetProductyById/{Id}";
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync($"http://localhost:5000/api/Product/GetProductyById/{Id}")) 
+                using (var response = await httpClient.GetAsync($"http://localhost:5000/api/Product/GetProductyById/{Id}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     var product = JsonConvert.DeserializeObject<ProductDetails>(apiResponse);
                     return View(product);
                 }
-                 
+
             }
 
         }
@@ -70,22 +71,32 @@ namespace AdminDashBoard.Controllers
 
         public IActionResult Create()
         {
-            var viewModel = new Models.Product
+            if (User.Identity.IsAuthenticated == true)
             {
-                category = new SelectList(dBContext.Categories, "Id", "Name")
+                ViewBag.name = User.Identity.Name;
+            }
+
+            var viewModel = new Models.test
+            {
+                category = new SelectList(dBContext.Categories.Select(a=> new GetAllCategory { Id=a.Id ,Name=a.Name}), "Id", "Name")
             };
 
             return View(viewModel);
-             
+
         }
         [HttpPost]
         public async Task<IActionResult> Create(Models.Product product)
         {
 
+            if (User.Identity.IsAuthenticated == true)
+            {
+                ViewBag.name = User.Identity.Name;
+            }
+
             var file = product.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
-            
+
 
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
@@ -95,7 +106,7 @@ namespace AdminDashBoard.Controllers
                 await file.CopyToAsync(stream);
             }
             product.ImagePath = filePath;
-            var category = dBContext.Categories.Where(e=>e.Id==product.CategoryId).FirstOrDefault();
+            //  var category = dBContext.Categories.Where(e => e.Id == product.CategoryId).FirstOrDefault();
 
             var min = new Domain.Product()
             {
@@ -104,17 +115,17 @@ namespace AdminDashBoard.Controllers
                 DiscriptionArabic = product.DescriptionArabic,
                 Discription = product.Description,
                 Discount = product.Discount,
-                category = category,
+                CategoryId = product.CategoryId,
                 Price = product.Price,
                 ImagePath = product.ImagePath
 
             };
-             await dBContext.Products.AddAsync(min);
-           await dBContext.SaveChangesAsync();
-               return RedirectToAction("Index");
+            await dBContext.Products.AddAsync(min);
+            await dBContext.SaveChangesAsync();
+            return RedirectToAction("Index");
             #region
             //using (var client = new HttpClient())
-            //{
+            // {
             //    //var file = product.Images;
             //    //if (file == null || file.Length == 0)
             //    //    return BadRequest("Please select an image");
@@ -143,47 +154,56 @@ namespace AdminDashBoard.Controllers
             //    //    Price= product.Price
             //    //};
 
-            //    client.BaseAddress = new Uri("http://localhost:5000/api/Product/CreateProduct");
-            //    var json = JsonConvert.SerializeObject(product);
-            //    var content = new StringContent(json,Encoding.UTF8,"multipart/form-data");
+            //client.BaseAddress = new Uri("http://localhost:5000/api/Product/CreateProduct");
+            //var json = JsonConvert.SerializeObject(product);
+            //var content = new StringContent(json, Encoding.UTF8, "multipart/form-data");
 
-            //    content.Headers.Remove("Content-Type");
-            //    content.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; charset=ISO-8859-4");
+            //content.Headers.Remove("Content-Type");
+            //content.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; charset=ISO-8859-4");
 
-            //    var response = await client.PostAsync("http://localhost:5000/api/Product/CreateProduct", content);
-            //    //var stringContent = new MultipartContent(json, "multipart/form-data");
+            //var response = await client.PostAsync("http://localhost:5000/api/Product/CreateProduct", content);
+            ////var stringContent = new MultipartContent(json, "multipart/form-data");
 
-            //    //var response = await client.PostAsync("", stringContent);
-            //    if (!response.IsSuccessStatusCode)
-            //    {
-            //        throw new Exception("uiu");
-            //        return View(product);
-            //    }
-            //    return RedirectToAction("Index");
-
+            ////var response = await client.PostAsync("", stringContent);
+            //if (!response.IsSuccessStatusCode)
+            //{
+            //    throw new Exception("uiu");
+            //    return View(product);
             //}
-            #endregion
-
-        }
+            //return RedirectToAction("Index");
 
         
+        #endregion
+
+    }
+
+
         public async Task<IActionResult> Delete(long id)
         {
+            if (User.Identity.IsAuthenticated == true)
+            {
+                ViewBag.name = User.Identity.Name;
+            }
+
             string apiUrl = $"http://localhost:5000/api/Product/DeleteProduct/{id}";
 
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.DeleteAsync(apiUrl);
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index");
             else
 
-            return BadRequest("Error!");
+                return BadRequest("Error!");
         }
 
-        
+
         public async Task<IActionResult> Update(long Id)
         {
-            var product =await dBContext.Products.FindAsync(Id);
+            if (User.Identity.IsAuthenticated == true)
+            {
+                ViewBag.name = User.Identity.Name;
+            }
+            var product = await dBContext.Products.FindAsync(Id);
             if (product == null)
                 return NotFound();
             else
@@ -198,8 +218,8 @@ namespace AdminDashBoard.Controllers
                 min.Description = product.Discription;
                 min.Discount = product.Discount;
                 min.Price = product.Price;
-                min.category = new SelectList(dBContext.Categories, "Id", "Name");
-               // min.ImagePath = product.ImagePath;
+                min.category = new SelectList(dBContext.Categories.Select(a=> new GetAllCategory {Id=a.Id,Name=a.Name }), "Id", "Name");
+                // min.ImagePath = product.ImagePath;
 
 
                 return View(min);
@@ -208,21 +228,22 @@ namespace AdminDashBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(Models.Product updatedProduct)
         {
+
             var product = dBContext.Products.FirstOrDefault(p => p.Id == updatedProduct.Id);
 
             if (product == null)
             {
                 return NotFound();
             }
-            var category = dBContext.Categories.Where(e => e.Id == product.category.Id).FirstOrDefault();
+            //var category = dBContext.Categories.Where(e => e.Id == product.category.Id).FirstOrDefault();
 
             var file = updatedProduct.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
-             
+
 
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+            var filePath = Path.Combine("D:\\final\\APIs-master\\APIs-master\\api", "Images", fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -238,7 +259,7 @@ namespace AdminDashBoard.Controllers
             product.Discount = updatedProduct.Discount;
             product.AvailUnit = updatedProduct.AvailUnit;
             product.ImagePath = updatedProduct.ImagePath;
-            product.category = category;
+            product.CategoryId =updatedProduct.CategoryId ;
             // Save changes to the database
             dBContext.SaveChanges();
 

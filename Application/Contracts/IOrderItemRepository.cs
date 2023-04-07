@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using Domain;
 namespace Application.Contracts
 {
-    public  interface IOrderItemRepository:IRepository<OrderItem,int>
+    public interface IOrderItemRepository
     {
-        Task<IEnumerable<OrderItem>> GetAllOrdersItemAsync();
-
+        List<OrderItem> GetAll();
+        OrderItem Get(int Id);
+        void Create(OrderItem Order_Items);
+        void Update(int Id, OrderItem Order_Items);
+        void Delete(int Id);
     }
 }

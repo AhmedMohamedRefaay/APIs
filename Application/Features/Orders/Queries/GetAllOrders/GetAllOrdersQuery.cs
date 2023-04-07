@@ -11,6 +11,6 @@ namespace Application.Features.Orders.Queries.GetAllOrders
    
     public class GetAllOrdersQuery : IRequest<IEnumerable<OrderMinimalDto>>
     {
-       
+      public int UserID{ set; get; }
     }
 }

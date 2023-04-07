@@ -13,11 +13,11 @@ namespace Application.Features.Orders.Commands.CreateOrder
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, bool>
     {
         private readonly IOrderRepository _OrderRepository;
-        private readonly IProductRepository _ProductRepository;
-        public CreateOrderCommandHandler(IOrderRepository order, IProductRepository _ProductRepo)
+        private readonly IOrderItemRepository _orderItemRepository;
+        public CreateOrderCommandHandler(IOrderRepository order, IOrderItemRepository orderItem)
         {
             _OrderRepository = order;
-            _ProductRepository = _ProductRepo;
+            _orderItemRepository = orderItem;
         }
 
        
@@ -25,18 +25,29 @@ namespace Application.Features.Orders.Commands.CreateOrder
          async Task<bool> IRequestHandler<CreateOrderCommand, bool>.Handle(CreateOrderCommand request,
              CancellationToken cancellationToken)
         {
-            List<Product> products = new List<Product>() ;
-           
-            for (int i = 0; i < request.products.Count(); i++)
+          
+            Order order = new Order();
+            for (int i = 0; i < request.orderItem.Count(); i++)
             {
-                Product r=await _ProductRepository.GetByIdAsyc(request.products[i]);
-                products.Add(r);
+                _orderItemRepository.Create(request.orderItem[i]);
+
+
+                order.AddOrderItem(request.orderItem[i]);
                 
-            }
-             Order item = new Order(products);
-            if (item != null)
+                
+            } ;
+            order.DeliveryDate = request.DeliveryDate;
+            order.DateOrder = request.DateOrder;
+            order.Tax = request.Tax;
+            order.ShippingPrice = request.ShippingPrice;
+            order.CardId = request.CardId;
+            order.UserID = request.UserID;
+            order.Total = request.Total;
+            order.OrderStatus = request.OrderStatus;    
+           
+            if (order != null)
             {
-                await _OrderRepository.CreateAsync(item);
+                 _OrderRepository.Create(order);
                 return true;
             }
             else

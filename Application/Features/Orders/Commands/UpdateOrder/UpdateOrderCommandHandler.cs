@@ -19,13 +19,13 @@ namespace Application.Features.Orders.Commands.UpdateOrder
         }
         public async Task<bool> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
         {
-            var item = await _OrderRepository.GetByIdAsyc(request.Id);
-            if (item != null && request.products != null)
+            var item = await _OrderRepository.Get(request.Id);
+            if (item != null && request.orderItems != null)
             {
-                item.Products = request.products;
+                item.OrderItems = request.orderItems;
 
-                await _OrderRepository.UpdateAsync(item);
-                await _OrderRepository.Save();
+                 _OrderRepository.Update(request.Id,item);
+                 
                 return true;
             }
             else

@@ -26,8 +26,22 @@ namespace Application.Features.Products.Commands.CreateProduct
 
         public async Task<bool> Handle(CreateProductCaommand request, CancellationToken cancellationToken)
         {
-            Category category = await _categoryRepository.GetByIdAsyc(request.CategoryId);
             
+            var file = request.file;
+            if (file == null || file.Length == 0)
+                return false;
+
+
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            string ImagePath = null;
+            if (file != null)
+                ImagePath = filePath;
             var min = new Product()
             {
                 Name = request.Name,
@@ -35,9 +49,9 @@ namespace Application.Features.Products.Commands.CreateProduct
                 DiscriptionArabic=request.DescriptionArabic,
                 Discription = request.Description,
                 Discount= request.Discount,
-               category=category,
+               CategoryId=request.CategoryId,
                Price=request.Price,
-               ImagePath=request.ImagePath
+               ImagePath=ImagePath
 
             };
             if (min != null)

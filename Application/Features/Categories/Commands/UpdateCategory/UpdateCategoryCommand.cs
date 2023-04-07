@@ -15,15 +15,18 @@ namespace Application.Features.Categories.Commands.UpdateCategory
         public string Name { set; get; }
 
         public string NameArabic { set; get; }
-        public IFormFile Images { set; get; }
-        public Category? ParentCategory { set; get; }
-        public UpdateCategoryCommand(int Id, string Name,string NameArabic, IFormFile Images)
+
+        
+        public IFormFile file { set; get; }
+        public int? ParentCategory { set; get; }
+        public UpdateCategoryCommand(int Id, string Name,string NameArabic, IFormFile file,
+            int? ParentCategory = null)
         {
             this.Id = Id;
             this.NameArabic = NameArabic;
             this.Name = Name;
-            this.Images= Images;
-            
+            this.file = file;
+            this.ParentCategory = ParentCategory;
         }
         public UpdateCategoryCommand() { }
         

@@ -1,7 +1,13 @@
+using AdminDashBoard.Models.IRepository.Admin;
+using AdminDashBoard.Models.Services.Admin;
+using ApiContext;
+using Domain;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
-using ApiContext;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +23,32 @@ builder.Services.AddMvc(options =>
     var jsonInputFormatter = options.InputFormatters.OfType<SystemTextJsonInputFormatter>().First();
     jsonInputFormatter.SupportedMediaTypes.Add("multipart/form-data");
 });
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+
+builder.Services.AddTransient(typeof(IAdminRepository), typeof(AdminRepository));
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<DBContext>();
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//         .AddCookie(cookieOptions =>
+//         {
+//             cookieOptions.LoginPath = "/AdminAccount/LogIN";
+//             cookieOptions.AccessDeniedPath = "/account/denied";
+//             cookieOptions.ExpireTimeSpan = TimeSpan.FromMinutes(120);
+//         });
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.Cookie.Name = "YourAppCookieName";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.LoginPath = "/AdminAccount/LogIN";
+    // ReturnUrlParameter requires 
+    //using Microsoft.AspNetCore.Authentication.Cookies;
+    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+    options.SlidingExpiration = true;
+});
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

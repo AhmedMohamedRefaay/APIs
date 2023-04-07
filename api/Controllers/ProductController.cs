@@ -62,22 +62,7 @@ namespace api.Controllers
         {
             try
             {
-                var file = product.file;
-                if (file == null || file.Length == 0)
-                    return BadRequest("Please select an image");
-                //var imagesDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
-                //if (!Directory.Exists(imagesDirectoryPath))
-                //    Directory.CreateDirectory(imagesDirectoryPath);
-
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-                 if(file!=null)
-                product.ImagePath = filePath;
+               
                 return Ok(await _mediator.Send(new CreateProductCaommand
                (product.Name,
                product.NameArabic,
@@ -85,7 +70,7 @@ namespace api.Controllers
                product.Discount,
                product.Description,
                product.CategoryId,
-               product.ImagePath,
+               product.file,
                product.AvailUnit,
                product.Price))); 
                 
@@ -110,8 +95,9 @@ namespace api.Controllers
                product.DescriptionArabic,
                product.Discount,
                product.Description,
-               product.Images,
-               product.Price
+               product.file,
+               product.Price,
+               product.CategoryId
 
 
             ))); 

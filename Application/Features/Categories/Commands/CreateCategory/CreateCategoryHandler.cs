@@ -21,25 +21,35 @@ namespace Application.Features.Categories.Commands.CreateCategory
 
         public async Task<bool> Handle(CreateCategoryCaommand request, CancellationToken cancellationToken)
         {
-       
-            Category category=new Category();
-            if (request.ParentCategory!=null)
-           category= await _categoryRepository.GetByIdAsyc((int)request.ParentCategory);
 
-            using var datastream = new MemoryStream();
-            await request.Images.CopyToAsync(datastream);
+
+            var file = request.file;
+            if (file == null || file.Length == 0)
+                return false;
+
+
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            string ImagePath = null;
+            if (file != null)
+                ImagePath = filePath;
             var min = new Category()
             {
                 NameArabic=request.NameArabic,
-                Name = request.Name,
-                Images = datastream.ToArray(),
-              ParentCategory=category
+               Name = request.Name,
+           
+            parentId =request.ParentCategory,
+              ImagePath=ImagePath
             };
 
             if (min != null)
             {
-
-            
+                
                 await _categoryRepository.CreateAsync(min);
                 return true;
             }

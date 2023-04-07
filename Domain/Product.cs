@@ -17,20 +17,22 @@ namespace Domain
         public string NameArabic { set; get; }
         public string Discription  { get; set; }
 
-        public Order order { set; get; }
+       
         public string DiscriptionArabic { get; set; }
         [Range(0,100)]
 
         public float Price { set; get; }
         public int ?Discount { get; set; }
         public int AvailUnit { get; set; }       
-        public byte[] Images { set; get; }
+   
 
-        public OrderItem OrderItem { set; get; }
-       public string ImagePath { set; get; }
-        public  Category category { get;set; }
+        public string ImagePath { set; get; }
+
+        [ForeignKey("category")]
+        public int CategoryId { get; set; }
+        public Category category { get;set; }
         public Product(  string name,string nameArabic,string DiscAraibc,
-            string discription, int? discount,float Price, byte[]Images)
+            string discription, int? discount,float Price)
         {
             
             Name = name;
@@ -39,7 +41,7 @@ namespace Domain
             Discription = discription;
             Discount = discount;
             this.Price = Price;
-            this.Images=Images;
+            
         }
 
         public Product() { }

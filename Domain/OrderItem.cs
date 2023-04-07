@@ -8,7 +8,8 @@ namespace Domain
 {
     public class OrderItem
     {
-        public int Id{ get; set; }
+
+        public int ID { get; set; }
         public int Quantity { get; set; }
 
 
@@ -23,5 +24,6 @@ namespace Domain
 
         public virtual Order? Order { get; set; }
         public virtual Product? Product { get; set; }
+
     }
 }

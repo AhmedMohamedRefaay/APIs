@@ -33,11 +33,11 @@ namespace api.Controllers
         }
 
         // URL -  http://localhost:5011/api/Order/{id} type GET
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderDetails(int id)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetOrderDetails(int Id)
         {
             // command.Id=id;
-            return Ok(await mediator.Send(new GetOrderDetailsQuery() { Id=id }));
+            return Ok(await mediator.Send(new GetOrderDetailsQuery() { Id=Id }));
         }
         // URL - http://localhost:5118/api/Order/ type Post
         [HttpPost]
@@ -45,10 +45,14 @@ namespace api.Controllers
         {
             try
             {
-
-                return Ok(await mediator.Send(new CreateOrderCommand
-               (query.products))); ;
-
+               return Ok(await mediator.Send(new CreateOrderCommand
+               (query.orderItem,
+               query.CardId,
+               query.UserID,
+               query.ShippingPrice,
+               query.Tax,
+               query.Total
+              ))); 
 
             }
             catch (Exception e)
@@ -65,11 +69,11 @@ namespace api.Controllers
 
         }
         // URL - http://localhost:5118/api/Order/{id} type Delete
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id, [FromQuery] DeleteOrderCommand command)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteOrder(int Id)
         {
-            command.Id = id;
-            return Ok(await mediator.Send(command));
+           
+            return Ok(await mediator.Send(new DeleteOrderCommand() { Id = Id }));
         }
     }
        

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ApiContext
 {
-    public class DBContext : IdentityDbContext
+     public class DBContext : IdentityDbContext<User, Role, int>
     {
         public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
@@ -20,25 +20,31 @@ namespace ApiContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Category>()
+
+            
+        modelBuilder.Entity<Category>()
        .HasMany<Product>(g => g.Products)
-       .WithOne(s => s.category)
-        
+       
+       .WithOne(s => s.category).HasForeignKey(p=>p.CategoryId)
        .OnDelete(DeleteBehavior.Cascade);
 
-
+      modelBuilder.Entity<Order>()
+     .HasMany<OrderItem>(g => g.OrderItems)
+     .WithOne(s => s.Order)
+     .OnDelete(DeleteBehavior.Cascade);
 
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
 
-        //public DbSet<Order> Orders { get; set; }
+       public DbSet<Order> Orders { get; set; }
 
-        //public DbSet<Review> Reviews { get; set; }
+        public DbSet<OrderItem> orderItems { get; set; }
 
-        //public DbSet<OrderItem> OrderItems { set; get; }
+        public DbSet<WishList> WishList { get; set; }
 
-         
+
+
 
     }
 }

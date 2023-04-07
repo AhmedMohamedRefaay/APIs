@@ -21,11 +21,11 @@ namespace Application.Features.Orders.Commands.DeleteOrder
         public async Task<bool> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
 
-            var item = await _OrderRepository.GetByIdAsyc(request.Id);
+            var item = await _OrderRepository.Get(request.Id);
             if (item != null)
             {
-                await _OrderRepository.DeleteAsync(item.Id);
-                await _OrderRepository.Save();
+                await _OrderRepository.Delete(item.Id);
+                
                 return true;
             }
             else

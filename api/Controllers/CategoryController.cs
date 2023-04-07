@@ -60,13 +60,14 @@ namespace api.Controllers
           )
         {
             try
-            { 
+            {
                 
+
                 return Ok(await _mediator.Send(new CreateCategoryCaommand
                (categor.Name,
                categor.NameArabic,
                  
-               categor.Images,
+               categor.file,
                categor.ParentCategory
                )));
 
@@ -88,8 +89,9 @@ namespace api.Controllers
                (category.Id,
                category.NameArabic,
                     category.Name,
-               category.Images
-                )));
+               category.file,
+               category.ParentCategory
+                ))) ;
  
 
             }

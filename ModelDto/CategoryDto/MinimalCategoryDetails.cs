@@ -10,7 +10,7 @@ namespace ModelDto.CategoryDto
     {
         public int ?parentCategory { get; set; }
 
-        public Category? Parent { set; get; }
+         
         public IEnumerable<Category> ?Subcategories { set; get; }
     
     }

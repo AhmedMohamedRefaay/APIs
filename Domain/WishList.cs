@@ -8,17 +8,47 @@ namespace Domain
 {
    public class WishList
     {
-        [Key]
-        [Column(Order = 1)]
+        
         public int Id { get; set; }
 
         public DateTime DataAdded { get; set; } //?????????
-        [Key]
-         [Column(Order = 2)]
-         
-        public Buyer  buyer{ get; set; }
+       
 
-        public IEnumerable<Product> products { get; set; }
+        [ForeignKey("User")]
+        public int UserID { set; get; }
+        public User User { set; get; }
 
+       
+        private List<Product> _products;
+
+        public IEnumerable<Product> products 
+        { get { return _products; }
+            
+            set { _products = value.ToList(); } }
+
+
+        public WishList()
+        {
+            _products = new List<Product>();
+        }
+
+
+        public bool AddProduct(Product product)
+        {
+           
+                _products.Add(product);
+                return true;
+            
+
+        }
+
+        public bool RemoveProduct(Product product)
+        {
+
+            _products.Remove(product);
+            return true;
+
+
+        }
     }
 }

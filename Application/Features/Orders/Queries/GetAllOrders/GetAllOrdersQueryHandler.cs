@@ -22,10 +22,10 @@ namespace Application.Features.Orders.Queries.GetAllOrders
 
         public async Task<IEnumerable<OrderMinimalDto>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
-            var Orders = await _OrderRepository.GetAllOrdersAsync();
+            var Orders = await _OrderRepository.GetAllByUserID(request.UserID);
 
-            return Orders.Select(a => new OrderMinimalDto { Id = a.Id, OrderStatus = a.OrderStatus.ToString(),
-            ProductId=(a.Products.Select(b=>b.Id).ToList())
+            return Orders.Select(a => new OrderMinimalDto { Id = a.Id, OrderStatus = a.OrderStatus,
+            orderItems=(a.OrderItems.ToList())
             });;
         }
     }

@@ -16,8 +16,9 @@ namespace ModelDto.CategoryDto
         [MinLength(3), MaxLength(10)]
         public string Name { get; set; }
     
+        public int? ParentCategory { set; get; }
         public string nameArabic { set; get; }
-        public byte[]? Images { get; set; }
+        public string ImagePath { get; set; }
 
     }
 }

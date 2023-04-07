@@ -14,23 +14,31 @@ namespace ModelDto.OrderDto
         public int Id { get; set; }
        
         public string OrderStatus { get; set; }
-        public IEnumerable<Product> Products { get; set; }
+        public IEnumerable<OrderItem> OrderItems { get; set; }
        
         public DateTime? DateOrder { get; set; }
     
+        public float? Total { set; get; }
         public DateTime? DeliveryDate { get; set; }
         public float? ShippingPrice { get; set; }
        public float? Tax { get; set; }
 
-        public OrderDetailsDto(int id, string orderStatus, IEnumerable<Product> products, DateTime? dateOrder = null, DateTime? deliveryDate = null, float? shippingPrice = null, float? tax = null)
-        {
-            Id = id;
+        public int Quantity { set; get; }
+        public OrderDetailsDto() { }
+        //public OrderDetailsDto
+        //    (int Id, string orderStatus, IEnumerable<OrderItem> orderItems,
+        //    DateTime? dateOrder = null, DateTime? deliveryDate = null,
+        //    float? shippingPrice = null, float? Tax = null)
+        //{
+        //    this.Id = Id;
            
-            OrderStatus = orderStatus;
-            Products = products;
+        //    OrderStatus = orderStatus;
+        //    OrderItems = orderItems   ;
+        //    this.ShippingPrice = shippingPrice;
+        //    this.Tax = Tax;
            
 
-        }
+        //}
 
 
 

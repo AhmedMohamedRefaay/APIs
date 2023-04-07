@@ -19,14 +19,16 @@ namespace Application.Features.Categories.Commands.CreateCategory
         public int? ParentCategory { set; get; }
 
        
-        public IFormFile Images{ set; get; }
+    
+        public IFormFile file{ set; get; }
 
-        public CreateCategoryCaommand(string Name,string NameArabic, IFormFile Images,int? ParentCategory=null)
+        public CreateCategoryCaommand(string Name,string NameArabic,
+            IFormFile file, int? ParentCategory=null)
         {
             this.NameArabic = NameArabic;
             this.Name = Name;
             this.ParentCategory = ParentCategory;
-            this.Images = Images;
+            this.file = file;
         }
         public CreateCategoryCaommand() { }
        

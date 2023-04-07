@@ -47,7 +47,7 @@ namespace Infrastructure
             //    query = query.Where(e => e.NameArabic.ToLower().Contains(ArabicName.ToLower())).ToList();
             #endregion
             
-                var query = await _context.Products.Include(e => e.category)
+              var query = await _context.Products.Include(e => e.category)
             .Where(d => CategoryId == null || d.category.Id == CategoryId)
             .Where(d => ArabicName == null || d.NameArabic.ToLower().Contains( ArabicName))
             .Where(d => Name == null || d.Name.ToLower().Contains(Name))

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-
+using Domain;
 namespace Application.Features.Categories.Queries.GetAllCategories
 {
     public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<MinimalCategoryDto>>
@@ -25,8 +25,10 @@ namespace Application.Features.Categories.Queries.GetAllCategories
         {
             var r = await _categoryRepository.FilterAsync(request.Name,request.NameArabic);
           
+
+
             return  r.Select(e=>new MinimalCategoryDto
-           {Name=e.Name ,nameArabic=e.NameArabic,Images=e.Images,Id=e.Id}).ToList();
+           {Name=e.Name ,nameArabic=e.NameArabic,ImagePath=e.ImagePath,Id=e.Id,ParentCategory=e.parentId}).ToList();
              
 
         }

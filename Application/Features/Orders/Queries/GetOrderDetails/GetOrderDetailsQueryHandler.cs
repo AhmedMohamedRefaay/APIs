@@ -19,9 +19,23 @@ namespace Application.Features.Orders.Queries.GetOrderDetails
         }
         public async Task<OrderDetailsDto> Handle(GetOrderDetailsQuery request, CancellationToken cancellationToken)
         {
-            var item = await _OrderRepository.GetByIdAsyc(request.Id);
+            var item = await _OrderRepository.Get(request.Id);
+           if(item.DeliveryDate==DateTime.Now)
+            {
+                item.OrderStatus = "Delevired";
 
-            return new OrderDetailsDto(item.Id,item.OrderStatus.ToString(),item.Products) ;
+            }
+            return new OrderDetailsDto
+            {
+                Id = item.Id,
+               ShippingPrice=item.ShippingPrice,
+               Tax=item.Tax,
+               DateOrder=item.DateOrder,
+             Total=item.Total,
+             OrderStatus=item.OrderStatus,
+             DeliveryDate=item.DeliveryDate,
+             Quantity=item.OrderItems.Select(q=>q.Quantity).Sum()
+            } ;
         }
     }
 }

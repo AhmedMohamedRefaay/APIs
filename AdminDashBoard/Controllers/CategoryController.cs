@@ -18,11 +18,11 @@ namespace AdminDashBoard.Controllers
         private readonly HttpClient _httpClient = new HttpClient();
 
         private readonly DBContext dBContext;
-        private readonly IWebHostEnvironment _env;
-        public CategoryController(DBContext _dBContext, IWebHostEnvironment env)
+      
+        public CategoryController(DBContext _dBContext)
         {
             dBContext = _dBContext;
-            _env = env;
+             
         }
 
 
@@ -90,9 +90,16 @@ namespace AdminDashBoard.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
 
-
+            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
+            if (!System.IO.Directory.Exists(imagePath))
+            {
+                System.IO.Directory.CreateDirectory(imagePath);
+            }
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+            var filePath = Path.Combine(imagePath, fileName);
+
+           
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -161,9 +168,14 @@ namespace AdminDashBoard.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
 
-
+            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
+            if (!System.IO.Directory.Exists(imagePath))
+            {
+                System.IO.Directory.CreateDirectory(imagePath);
+            }
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+            var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

@@ -29,8 +29,14 @@ namespace Application.Features.Products.Commands.UpdateProduct
                 return false;
 
 
+            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            string imagePath = System.IO.Path.Combine(currentDirectory, "ProductImages");
+            if (!System.IO.Directory.Exists(imagePath))
+            {
+                System.IO.Directory.CreateDirectory(imagePath);
+            }
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+            var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

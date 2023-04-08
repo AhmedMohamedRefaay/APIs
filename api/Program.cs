@@ -12,7 +12,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors();
 builder.Services.Configure<Jwt>(builder.Configuration.GetSection("JWT"));
 
 builder.Services.AddDbContext<DBContext>(options =>
@@ -40,15 +40,15 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 //builder.Services.AddMvcCore(); 
-//builder.Services.AddMediatR(config =>
-//{ config.RegisterServicesFromAssembly(typeof(GetAllProductsQuery).Assembly); });
-//builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-//builder.Services.AddScoped<IProductRepository, ProductRepository>();
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddTransient<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-//builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-//builder.Services.AddScoped<IWishListRepository, WishListRepository>();
+builder.Services.AddMediatR(config =>
+{ config.RegisterServicesFromAssembly(typeof(GetAllProductsQuery).Assembly); });
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IWishListRepository, WishListRepository>();
 //authentaction servies with jwt
 builder.Services.AddAuthentication(options =>
 {
@@ -81,6 +81,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseAuthentication();
 app.UseAuthorization();
 //app.MapGet("/", () => "Hello World!");

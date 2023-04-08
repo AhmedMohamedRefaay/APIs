@@ -33,6 +33,11 @@ namespace ApiContext
      .WithOne(s => s.Order)
      .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Product>()
+  .HasOne<OrderItem>()
+  .WithOne(s => s.Product)
+  .OnDelete(DeleteBehavior.Cascade);
+
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }

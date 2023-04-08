@@ -14,11 +14,11 @@ namespace AdminDashBoard.Controllers
     public class ProductController : Controller
     {
         private readonly DBContext dBContext;
-        private readonly IWebHostEnvironment _env;
-        public ProductController(DBContext _dBContext, IWebHostEnvironment env)
+        
+        public ProductController(DBContext _dBContext)
         {
             dBContext = _dBContext;
-            _env = env;
+            
         }
         private readonly HttpClient _httpClient = new HttpClient();
 
@@ -76,7 +76,7 @@ namespace AdminDashBoard.Controllers
                 ViewBag.name = User.Identity.Name;
             }
 
-            var viewModel = new Models.test
+            var viewModel = new Models.Product
             {
                 category = new SelectList(dBContext.Categories.Select(a=> new GetAllCategory { Id=a.Id ,Name=a.Name}), "Id", "Name")
             };
@@ -97,9 +97,14 @@ namespace AdminDashBoard.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
 
-
+            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            string imagePath = System.IO.Path.Combine(currentDirectory, "ProductImages");
+            if (!System.IO.Directory.Exists(imagePath))
+            {
+                System.IO.Directory.CreateDirectory(imagePath);
+            }
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine("G:\\itiProjectFinal\\api", "Images", fileName);
+            var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -240,10 +245,14 @@ namespace AdminDashBoard.Controllers
             var file = updatedProduct.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
-
-
+            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            string imagePath = System.IO.Path.Combine(currentDirectory, "ProductImages");
+            if (!System.IO.Directory.Exists(imagePath))
+            {
+                System.IO.Directory.CreateDirectory(imagePath);
+            }
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine("D:\\final\\APIs-master\\APIs-master\\api", "Images", fileName);
+            var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

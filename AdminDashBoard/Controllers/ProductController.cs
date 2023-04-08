@@ -8,9 +8,12 @@ using ApiContext;
 using Domain;
 
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace AdminDashBoard.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly DBContext dBContext;

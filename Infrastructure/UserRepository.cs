@@ -103,8 +103,9 @@ namespace Infrastructure
 				); ;
 
 			var jwtSecurityToken = await CreateJwtToken(_user);
-            return new AuthModel
+			return new AuthModel
 			{
+				UserId = _user.Id,
 				Email = _user.Email!,
 				ExpiresOn = jwtSecurityToken.ValidTo,
 				IsAuthenticated = true,
@@ -157,8 +158,9 @@ namespace Infrastructure
 			    var jwtSecurityToken = await CreateJwtToken(_user);
 			    var rollist = await UserManager.GetRolesAsync(_user);
 			    authModel.IsAuthenticated = true;
-			    authModel.Email = _user.Email;
-		    	authModel.Username = _user.UserName;
+		    	authModel.UserId = _user.Id;
+			    authModel.Email = _user.Email!;
+		    	authModel.Username = _user.UserName!;
 			    authModel.ExpiresOn = jwtSecurityToken.ValidTo;
 			    authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 			    authModel.Roles = rollist.ToList();

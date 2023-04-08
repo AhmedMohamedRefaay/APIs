@@ -1,5 +1,5 @@
 ﻿@{
-   string name = ViewBag.name;
+    string name = ViewBag.name;
 
 }
 <!DOCTYPE html>
@@ -33,6 +33,12 @@
 
     <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
+
+    <style>
+        .content {
+            background-color: #6c757d !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -78,6 +84,8 @@
                         </div>
                     </div>
                     <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Order</a>
+                    <a asp-controller="Review" asp-action="Index" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Show All Reviews</a>
+
                     <a asp-controller="Admin" asp-action="Index" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Show All User</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
@@ -93,7 +101,7 @@
         </div>
         <!-- Sidebar End -->
         <!-- Content Start -->
-        <div class="content">
+        <div class="content bg-body">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
@@ -184,7 +192,7 @@
             </nav>
             <!-- Navbar End -->
             <!-- Sale & Revenue Start -->
-            <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid pt-4 px-4 ">
                 <main role="main" class="pb-3">
                     @RenderBody()
                 </main>
@@ -225,7 +233,7 @@
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
 
-  @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

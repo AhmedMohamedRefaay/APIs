@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiContext.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20230404140910_UpdateOrder")]
-    partial class UpdateOrder
+    [Migration("20230408214526_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,7 +113,7 @@ namespace ApiContext.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardId")
+                    b.Property<int?>("CardId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("DateOrder")
@@ -131,6 +131,9 @@ namespace ApiContext.Migrations
                     b.Property<float?>("Tax")
                         .HasColumnType("real");
 
+                    b.Property<int?>("Total")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UserID")
                         .HasColumnType("int");
 
@@ -141,6 +144,43 @@ namespace ApiContext.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Domain.OrderItem", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ProductID")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("OrderID");
+
+                    b.HasIndex("ProductID")
+                        .IsUnique()
+                        .HasFilter("[ProductID] IS NOT NULL");
+
+                    b.ToTable("orderItems");
                 });
 
             modelBuilder.Entity("Domain.Product", b =>
@@ -179,16 +219,48 @@ namespace ApiContext.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
-                    b.Property<int?>("orderId")
+                    b.Property<int?>("WishListId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("orderId");
+                    b.HasIndex("WishListId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Domain.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Domain.Role", b =>
@@ -295,6 +367,27 @@ namespace ApiContext.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.WishList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("WishList");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -420,7 +513,7 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.User", "user")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("user");
@@ -430,8 +523,7 @@ namespace ApiContext.Migrations
                 {
                     b.HasOne("Domain.Category", "ParentCategory")
                         .WithMany("Subcategories")
-                        .HasForeignKey("parentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("parentId");
 
                     b.Navigation("ParentCategory");
                 });
@@ -440,18 +532,32 @@ namespace ApiContext.Migrations
                 {
                     b.HasOne("Domain.Card", "Card")
                         .WithMany()
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CardId");
 
                     b.HasOne("Domain.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Card");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.OrderItem", b =>
+                {
+                    b.HasOne("Domain.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Product", "Product")
+                        .WithOne()
+                        .HasForeignKey("Domain.OrderItem", "ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Product", b =>
@@ -459,17 +565,44 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.Category", "category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Order", "order")
-                        .WithMany("Products")
-                        .HasForeignKey("orderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("Domain.WishList", null)
+                        .WithMany("products")
+                        .HasForeignKey("WishListId");
 
                     b.Navigation("category");
+                });
 
-                    b.Navigation("order");
+            modelBuilder.Entity("Domain.Review", b =>
+                {
+                    b.HasOne("Domain.Product", "product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.User", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("product");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Domain.WishList", b =>
+                {
+                    b.HasOne("Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -477,7 +610,7 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -486,7 +619,7 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -495,7 +628,7 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -504,13 +637,13 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -519,7 +652,7 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -528,13 +661,13 @@ namespace ApiContext.Migrations
                     b.HasOne("Domain.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -547,7 +680,12 @@ namespace ApiContext.Migrations
 
             modelBuilder.Entity("Domain.Order", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Domain.WishList", b =>
+                {
+                    b.Navigation("products");
                 });
 #pragma warning restore 612, 618
         }

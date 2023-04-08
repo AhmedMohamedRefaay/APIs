@@ -12,7 +12,7 @@ using AdminDashBoard.Models;
 
 namespace AdminDashBoard.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class CategoryController : Controller
     {
         private readonly HttpClient _httpClient = new HttpClient();

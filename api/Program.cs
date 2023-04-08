@@ -45,9 +45,10 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+//builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IReviewRepository, RviewRepository>();
 builder.Services.AddScoped<IWishListRepository, WishListRepository>();
 //authentaction servies with jwt
 builder.Services.AddAuthentication(options =>

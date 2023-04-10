@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using InfraStructure.Helpers;
 using Microsoft.Extensions.Options;
+using ApiContext;
 
 namespace Infrastructure
 {
@@ -17,16 +18,18 @@ namespace Infrastructure
 		private readonly UserManager<User> UserManager;
 		private readonly IConfiguration _Configuration;
 		private readonly  Jwt _jwt;
-		private readonly RoleManager<Role> _roleManager; 
-
-		public UserRepository(UserManager<User> userManager,IConfiguration configuration, IOptions<Jwt> jwt, RoleManager<Role> roleManager) 
+		private readonly RoleManager<Role> _roleManager;
+        private readonly SignInManager<User> _signInManager;
+		private readonly DBContext _context;
+        public UserRepository(UserManager<User> userManager,IConfiguration configuration, IOptions<Jwt> jwt, RoleManager<Role> roleManager, SignInManager<User> signInManager, DBContext context) 
 		{
             UserManager = userManager;
             _Configuration = configuration;
             _roleManager = roleManager;
             _jwt = jwt.Value;
+			_signInManager = signInManager;
+			_context = context;
         }
-
 		public async Task<AuthModel> Registration(RegistrationModel registrationModel)
 		{
 			if (registrationModel == null)
@@ -51,7 +54,7 @@ namespace Infrastructure
 			{ 
                 AuthModel authModel = new AuthModel();
 
-               authModel.Message = "Email Is Already Registered!";
+               authModel.Message = "Email Is Already Registered";
                authModel.IsAuthenticated = false;
                return authModel;
             }
@@ -63,7 +66,7 @@ namespace Infrastructure
 			{
                 AuthModel authModel = new AuthModel();
 
-                authModel.Message = "UserName Is Already Registered!";
+                authModel.Message = "UserName Is Already Registered";
                 authModel.IsAuthenticated = false;
                 return authModel;
 
@@ -105,6 +108,7 @@ namespace Infrastructure
 			var jwtSecurityToken = await CreateJwtToken(_user);
 			return new AuthModel
 			{
+				Message = "Registration Is Succssfully",
 				UserId = _user.Id,
 				Email = _user.Email!,
 				ExpiresOn = jwtSecurityToken.ValidTo,
@@ -114,7 +118,6 @@ namespace Infrastructure
 				Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)
 			};
 		}
-
 		public async Task<AuthModel> Login(LoginModel loginModel)
 		{
 			AuthModel authModel=new AuthModel();
@@ -125,7 +128,7 @@ namespace Infrastructure
 			{
                 AuthModel authModel1 = new AuthModel();
 
-                authModel1.Message = "There is user with this Email!";
+                authModel1.Message = "There is no user with this Email";
                 authModel1.IsAuthenticated = false;
                 return authModel1;
 
@@ -134,7 +137,7 @@ namespace Infrastructure
 			{
                 AuthModel authModel1 = new AuthModel();
 
-                authModel1.Message = "Invalid Password!";
+                authModel1.Message = "Invalid Password";
                 authModel1.IsAuthenticated = false;
                 return authModel1;
 
@@ -157,13 +160,14 @@ namespace Infrastructure
 
 			    var jwtSecurityToken = await CreateJwtToken(_user);
 			    var rollist = await UserManager.GetRolesAsync(_user);
-			    authModel.IsAuthenticated = true;
-		    	authModel.UserId = _user.Id;
-			    authModel.Email = _user.Email!;
-		    	authModel.Username = _user.UserName!;
-			    authModel.ExpiresOn = jwtSecurityToken.ValidTo;
-			    authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-			    authModel.Roles = rollist.ToList();
+				authModel.Message="LogIn Is Succssfully"; 
+                authModel.IsAuthenticated = true;
+		    	authModel.UserId=_user.Id;
+			    authModel.Email=_user.Email!;
+		    	authModel.Username=_user.UserName!;
+			    authModel.ExpiresOn=jwtSecurityToken.ValidTo;
+			    authModel.Token=new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+			    authModel.Roles=rollist.ToList();
 			    return authModel;
 
 		
@@ -196,25 +200,57 @@ namespace Infrastructure
 				claims: claims,
 				expires: DateTime.Now.AddDays(_jwt.DurtionInDays),
 				signingCredentials: signingCredentials);
-
+			  
 
 			return jwtSecurityToken;
 		}
 
-		public async Task<string> UpdateUser(LoginModel loginModel)
-		{
-			var _user = await UserManager.FindByEmailAsync(loginModel.Email);
-            if (_user is null )
-            {
-                return "Email or Password is incorrect!";
-            }
-			else
-			{
-				return "HELLO";
-			}
+		
 
+        public async void logout()
+        {
+            await _signInManager.SignOutAsync();
         }
 
 
+        public async Task<bool> UpdateAsync(User user)
+        {
+            var entity = await UserManager.UpdateAsync(user);//.Update(user);
+
+            await _context.SaveChangesAsync();
+            if (entity != null)
+            {
+                //return Task.FromResult(true);
+                return true;
+            }
+            else
+            {
+                // return Task.FromResult(false);
+                return false;
+            }
+        }
+
+        public async Task<bool> ChangePasswordAsync(User user)
+        {
+            var entity = await UserManager.UpdateAsync(user);
+            await _context.SaveChangesAsync();
+            if (entity != null)
+            {
+                //return Task.FromResult(true);
+                return true;
+            }
+            else
+            {
+                // return Task.FromResult(false);
+                return false;
+            }
+        }
+
+
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            var user = await UserManager.FindByIdAsync(id.ToString());
+            return user;
+        }
     }
 }

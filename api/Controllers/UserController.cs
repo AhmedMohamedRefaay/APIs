@@ -27,7 +27,7 @@ namespace api.Controllers
         }
 
         [HttpPost("Register")]
-		public async Task<IActionResult> SignUp([FromForm] RegistrationModel registrationModel)
+		public async Task<IActionResult> SignUp([FromBody] RegistrationModel registrationModel)
 		{
             AuthModel resulat = await _userRepository.Registration(registrationModel);
 
@@ -43,7 +43,7 @@ namespace api.Controllers
 
 		}
 		[HttpPost("login")]
-		public async Task<IActionResult> LogIN([FromForm] LoginModel loginModel)
+		public async Task<IActionResult> LogIN([FromBody] LoginModel loginModel)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);

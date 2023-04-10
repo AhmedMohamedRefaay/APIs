@@ -1,0 +1,41 @@
+﻿@model Domain.Category;
+ 
+
+<div class="container p-3 my-3 border">
+    
+    <hr />
+    <dl class="row">
+        <dt></dt>
+        <dd>
+            <img src="@Model.ImagePath" width="100" height="150" />
+        </dd>
+        
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.NameArabic)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.NameArabic)
+        </dd>
+         
+        
+         
+      
+    </dl>
+     
+</div>
+ 
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -12,19 +12,18 @@ using AdminDashBoard.Models;
 
 namespace AdminDashBoard.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
         private readonly DBContext dBContext;
-      
+
         public CategoryController(DBContext _dBContext)
         {
             dBContext = _dBContext;
-             
-        }
 
+        }
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -35,7 +34,7 @@ namespace AdminDashBoard.Controllers
             }
 
             List<GetAllCategory> getAllCategories = new List<GetAllCategory>(); ;
-            
+
             var data = dBContext.Categories.Select(a => new GetAllCategory
             {
                 Id = a.Id,
@@ -47,8 +46,6 @@ namespace AdminDashBoard.Controllers
         }
 
 
-
-
         // GET: Category/Details/5
         public ActionResult Details(int id)
         {
@@ -57,7 +54,7 @@ namespace AdminDashBoard.Controllers
                 ViewBag.name = User.Identity.Name;
             }
 
-            return View();
+            return View(dBContext.Categories.FirstOrDefault(e=>e.Id==id));
         }
 
         // GET: Category/Create
@@ -67,25 +64,25 @@ namespace AdminDashBoard.Controllers
             {
                 ViewBag.name = User.Identity.Name;
             }
-            
+
             var viewModel = new Models.Category
             {
-                category = new SelectList(dBContext.Categories.Select(a=> new GetAllCategory {Id=a.Id,Name=a.Name }), "Id", "Name")
+                category = new SelectList(dBContext.Categories.Select(a => new GetAllCategory { Id = a.Id, Name = a.Name }), "Id", "Name")
             };
-            
-            if(viewModel==null)
+
+            if (viewModel == null)
             {
                 return View();
             }
             else
-            return View(viewModel);
+                return View(viewModel);
         }
 
         // POST: Category/Create
         [HttpPost]
-        public async Task< ActionResult> Create(Models.Category category)
+        public async Task<ActionResult> Create(Models.Category category)
         {
-            
+
             var file = category.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
@@ -99,39 +96,43 @@ namespace AdminDashBoard.Controllers
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             var filePath = Path.Combine(imagePath, fileName);
 
-           
+
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
             category.ImagePath = filePath;
-             
-            // var cate = dBContext.Categories.Where(e => e.Id == category).FirstOrDefault();
+
+            
             var min = new Domain.Category()
             {
                 Name = category.Name,
                 NameArabic = category.NameArabic,
                 ImagePath = category.ImagePath,
-                parentId =category.ParentCategory  ,
-                
+                parentId= category.ParentCategory
             };
+
+            if (category.ParentCategory != null)
+            {
+                min.parentId = category.ParentCategory;
+
+
+            }
             await dBContext.Categories.AddAsync(min);
             await dBContext.SaveChangesAsync();
             return RedirectToAction("Index");
 
         }
 
-
-        // GET: Category/Edit/5
-        public async Task< ActionResult> Edit(int Id)
+        public async Task<ActionResult> Edit(int Id)
         {
             if (User.Identity.IsAuthenticated == true)
             {
                 ViewBag.name = User.Identity.Name;
             }
 
-            var category =  dBContext.Categories.Where(a=>a.Id==Id).FirstOrDefault();
+            var category = dBContext.Categories.Where(a => a.Id == Id).FirstOrDefault();
             if (category == null)
                 return NotFound();
             else
@@ -142,7 +143,7 @@ namespace AdminDashBoard.Controllers
                 min.Id = category.Id;
                 min.Name = category.Name;
                 min.NameArabic = category.NameArabic;
-                min.ImagePath = category.ImagePath;
+
                 min.category = new SelectList(dBContext.Categories.Select(a => new GetAllCategory { Id = a.Id, Name = a.Name }), "Id", "Name");
 
 
@@ -151,10 +152,9 @@ namespace AdminDashBoard.Controllers
             }
         }
 
-        // POST: Category/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Models.Category category )
+
+        public async Task<ActionResult> Edit(Models.Category category)
         {
             var cat = await dBContext.Categories.FirstOrDefaultAsync(p => p.Id == category.Id);
 
@@ -162,7 +162,7 @@ namespace AdminDashBoard.Controllers
             {
                 return NotFound();
             }
-          //  var category = dBContext.Categories.Where(e => e.Id == product.category.Id).FirstOrDefault();
+
 
             var file = category.Images;
             if (file == null || file.Length == 0)
@@ -185,7 +185,7 @@ namespace AdminDashBoard.Controllers
             // Update the properties of the product
             cat.Name = category.Name;
             cat.NameArabic = category.NameArabic;
-            cat.ImagePath = category.ImagePath;
+           
             cat.parentId = category.ParentCategory;
             // Save changes to the database
             dBContext.SaveChanges();
@@ -194,26 +194,31 @@ namespace AdminDashBoard.Controllers
             return RedirectToAction("Index");
 
         }
-           
- 
-
-
-
-    // POST: Category/Delete/5
-    [HttpPost]
-        public async Task<IActionResult> Delete(int Id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var cat = dBContext.Categories.FirstOrDefault(a=>a.Id== Id);
+            //string apiUrl = $"http://localhost:5000/api/Category/DeleteCategory/{id}";
+
+            //HttpClient httpClient = new HttpClient();
+            //HttpResponseMessage response = await httpClient.DeleteAsync(apiUrl);
+            //if (response.IsSuccessStatusCode)
+            //    return RedirectToAction("Index");
+            //else
+
+            //    return BadRequest("Error!");
+            var cat = dBContext.Categories.Where(e => e.Id == id).FirstOrDefault();
             if (cat != null)
-            { 
+            {
                 dBContext.Categories.Remove(cat);
-                 dBContext.SaveChanges();
-                return RedirectToAction("Index","Home");
-
+                dBContext.SaveChanges();
+                return RedirectToAction("Index");
             }
-            else
-                return BadRequest("Error!");
 
+            else
+            {
+                return NotFound("Category not found");
+            }
         }
+
+        
     }
 }

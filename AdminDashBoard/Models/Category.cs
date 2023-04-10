@@ -14,7 +14,7 @@ namespace AdminDashBoard.Models
         public string NameArabic { get; set; }
 
         [Display(Name = "Category")]
-        public int ParentCategory { set; get; }
+        public int? ParentCategory { set; get; }
         public SelectList category { set; get; }
         [Required]
         public IFormFile? Images { get; set; }

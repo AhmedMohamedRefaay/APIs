@@ -1,5 +1,6 @@
 ﻿using ApiContext;
 using Application.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelDto.Users;
 
@@ -42,6 +43,7 @@ namespace api.Controllers
 			return Ok(resulat);
 
 		}
+		[Authorize(Roles ="User")]
 		[HttpPost("login")]
 		public async Task<IActionResult> LogIN([FromBody] LoginModel loginModel)
 		{
@@ -54,6 +56,7 @@ namespace api.Controllers
 			return Ok(resulat);
 
 		}
+        [Authorize(Roles = "User")]
         [HttpPost("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] LoginModel loginModel,string Email)
         {

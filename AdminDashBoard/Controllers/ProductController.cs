@@ -60,7 +60,7 @@ namespace AdminDashBoard.Controllers
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync($"http://localhost:5000/api/Product/GetProductyById/{Id}"))
+                using (var response = await httpClient.GetAsync($"http://ahmedrefaay-001-site1.ctempurl.com/API/api/Product/GetProductyById/{Id}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     var product = JsonConvert.DeserializeObject<ProductDetails>(apiResponse);
@@ -99,21 +99,23 @@ namespace AdminDashBoard.Controllers
             var file = product.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
+            //category.ImagePath = ImageFullPath;
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            string imagePath = System.IO.Path.Combine(currentDirectory, "ProductImages");
+            string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
             if (!System.IO.Directory.Exists(imagePath))
             {
                 System.IO.Directory.CreateDirectory(imagePath);
             }
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
             var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            product.ImagePath = filePath;
+            product.ImagePath = $"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}";
             //  var category = dBContext.Categories.Where(e => e.Id == product.CategoryId).FirstOrDefault();
 
             var min = new Domain.Product()
@@ -192,16 +194,18 @@ namespace AdminDashBoard.Controllers
             {
                 ViewBag.name = User.Identity.Name;
             }
-
-            string apiUrl = $"http://localhost:5000/api/Product/DeleteProduct/{id}";
-
-            HttpClient httpClient = new HttpClient();
-            HttpResponseMessage response = await httpClient.DeleteAsync(apiUrl);
-            if (response.IsSuccessStatusCode)
+            var cat = dBContext.Products.Where(e => e.Id == id).FirstOrDefault();
+            if (cat != null)
+            {
+                dBContext.Products.Remove(cat);
+                dBContext.SaveChanges();
                 return RedirectToAction("Index");
-            else
+            }
 
-                return BadRequest("Error!");
+            else
+            {
+                return NotFound("Category not found");
+            }
         }
 
 
@@ -248,20 +252,25 @@ namespace AdminDashBoard.Controllers
             var file = updatedProduct.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
+             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
+            //category.ImagePath = ImageFullPath;
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            string imagePath = System.IO.Path.Combine(currentDirectory, "ProductImages");
+            string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
             if (!System.IO.Directory.Exists(imagePath))
             {
                 System.IO.Directory.CreateDirectory(imagePath);
             }
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
             var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            updatedProduct.ImagePath = filePath;
+            product.ImagePath = $"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}";
+           
+            updatedProduct.ImagePath =fileName;
             // Update the properties of the product
             product.Name = updatedProduct.Name;
             product.NameArabic = updatedProduct.NameArabic;

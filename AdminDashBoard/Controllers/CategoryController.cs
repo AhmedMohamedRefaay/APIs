@@ -18,11 +18,11 @@ namespace AdminDashBoard.Controllers
         private readonly HttpClient _httpClient = new HttpClient();
 
         private readonly DBContext dBContext;
-
-        public CategoryController(DBContext _dBContext)
+        private readonly IWebHostEnvironment _environment;
+        public CategoryController(DBContext _dBContext,IWebHostEnvironment environment)
         {
             dBContext = _dBContext;
-
+            _environment = environment;
         }
 
         [HttpGet]
@@ -86,31 +86,30 @@ namespace AdminDashBoard.Controllers
             var file = category.Images;
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
+            //category.ImagePath = ImageFullPath;
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
             string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
             if (!System.IO.Directory.Exists(imagePath))
             {
                 System.IO.Directory.CreateDirectory(imagePath);
             }
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+
             var filePath = Path.Combine(imagePath, fileName);
-
-
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            category.ImagePath = filePath;
 
-            
+
             var min = new Domain.Category()
             {
                 Name = category.Name,
                 NameArabic = category.NameArabic,
-                ImagePath = category.ImagePath,
-                parentId= category.ParentCategory
+                ImagePath =$"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}",
+                parentId = category.ParentCategory
             };
 
             if (category.ParentCategory != null)
@@ -168,20 +167,24 @@ namespace AdminDashBoard.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("Please select an image");
 
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+             
+            //category.ImagePath = ImageFullPath;
             string currentDirectory = System.IO.Directory.GetCurrentDirectory();
             string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
             if (!System.IO.Directory.Exists(imagePath))
             {
                 System.IO.Directory.CreateDirectory(imagePath);
             }
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            
             var filePath = Path.Combine(imagePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            cat.ImagePath = filePath;
+            cat.ImagePath =$"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}";
+            ;
             // Update the properties of the product
             cat.Name = category.Name;
             cat.NameArabic = category.NameArabic;
@@ -196,15 +199,7 @@ namespace AdminDashBoard.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            //string apiUrl = $"http://localhost:5000/api/Category/DeleteCategory/{id}";
-
-            //HttpClient httpClient = new HttpClient();
-            //HttpResponseMessage response = await httpClient.DeleteAsync(apiUrl);
-            //if (response.IsSuccessStatusCode)
-            //    return RedirectToAction("Index");
-            //else
-
-            //    return BadRequest("Error!");
+           
             var cat = dBContext.Categories.Where(e => e.Id == id).FirstOrDefault();
             if (cat != null)
             {

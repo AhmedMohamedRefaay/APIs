@@ -8,7 +8,7 @@ namespace ModelDto.CategoryDto
 {
     public class MinimalCategoryDetails : MinimalCategoryDto
     {
-        public int ?parentCategory { get; set; }
+        
 
          
         public IEnumerable<Category> ?Subcategories { set; get; }

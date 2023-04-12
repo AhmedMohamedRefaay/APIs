@@ -20,10 +20,11 @@
                                 @Html.DisplayNameFor(model => model.NameArabic)
                             </th>
                             
-                            <th>
+                            
+                          
+                             <th>
                                 @Html.DisplayNameFor(model => model.ImagePath)
                             </th>
-                          
                             <th></th>
                         </tr>
                     </thead>
@@ -40,9 +41,11 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.NameArabic)
                                 </td>
+ 
 
+                                
                                 <td>
-                                    <img src="@(Convert.ToString(item.ImagePath))">
+                    <img src="@item.ImagePath" width="100" height="150">
 
                                 </td>
                                 <td>

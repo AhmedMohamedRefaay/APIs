@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DBContext>(options =>
@@ -56,6 +56,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.UseStaticFiles();
 
 app.UseRouting();

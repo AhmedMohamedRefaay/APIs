@@ -22,7 +22,7 @@ namespace Application.Features.Reviews.Commands.CreateProduct
 
         public async Task<bool> Handle(CreateReviewCaommand request, CancellationToken cancellationToken)
         {
-            Review review = await _reviewRepository.GetByIdAsyc(request.Id);
+           // Review review = await _reviewRepository.GetByIdAsyc(request.Id);
             var min = new Review()
             {
                 Comment = request.Comment,

@@ -1,6 +1,7 @@
 ﻿using ApiContext;
 using Application.Contracts;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ public RviewRepository(DBContext context) : base(context)
         {
         }
 
-        public Task<IEnumerable<Review>> FilterAsync()
+        public async Task<IEnumerable<Review>> FilterAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Reviews.ToListAsync();
         }
     }
 }

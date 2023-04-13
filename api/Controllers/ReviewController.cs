@@ -33,8 +33,16 @@ namespace api.Controllers
         {
             try
             {
+                var reviews = await _mediator.Send(query);
+                if(query.productId !=null)
+                {
 
-                return Ok(await _mediator.Send(query));
+                    reviews = reviews.Where(r => r.productId == query.productId);    
+                    
+
+                }
+
+                return Ok(reviews);
 
             }
             catch (Exception e)

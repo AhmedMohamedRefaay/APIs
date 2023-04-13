@@ -34,16 +34,14 @@ namespace api.Controllers
 
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-			if (resulat.Message=="Email Is Already Registered!")
-				return BadRequest(resulat);
-            else if (resulat.Message == "Reigster Model is null!")
-                return BadRequest(resulat);
-            else if(resulat.Message == "UserName Is Already Registered!")
-				return BadRequest(resulat);
-			return Ok(resulat);
 
-		}
-		[Authorize(Roles ="User")]
+			else
+			return Ok(resulat);
+            
+
+
+        }
+		//[Authorize(Roles ="User")]
 		[HttpPost("login")]
 		public async Task<IActionResult> LogIN([FromBody] LoginModel loginModel)
 		{
@@ -56,7 +54,7 @@ namespace api.Controllers
 			return Ok(resulat);
 
 		}
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         [HttpPost("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] LoginModel loginModel,string Email)
         {

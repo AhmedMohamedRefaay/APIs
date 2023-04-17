@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using ModelDto.CategoryDto;
 using Domain;
 
-namespace Application.Features.Reviews.Commands.CreateProduct
+namespace Application.Features.Reviews.Commands.CreateReview
 {
     public class CreateReviewHandler : IRequestHandler<CreateReviewCaommand, bool>
     {

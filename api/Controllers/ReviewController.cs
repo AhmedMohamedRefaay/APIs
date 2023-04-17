@@ -3,7 +3,7 @@ using Application.Features.Categories.Queries.GetCategoryById;
 using Application.Features.Products.Commands.CreateProduct;
 using Application.Features.Products.Commands.UpdateProduct;
 using Application.Features.Products.Queries.GetAllQuery;
-using Application.Features.Reviews.Commands.CreateProduct;
+using Application.Features.Reviews.Commands.CreateReview;
 using Application.Features.Reviews.Commands.DeleteReview;
 using Application.Features.Reviews.Commands.UpdateProduct;
 using Application.Features.Reviews.Queries.GetAllQuery;
@@ -77,7 +77,7 @@ namespace api.Controllers
 
         // POST: ReviewController/Create
         [HttpPost]
-        public async Task<IActionResult> CreateReview([FromForm] CreateReviewCaommand review)
+        public async Task<IActionResult> CreateReview([FromBody] CreateReviewCaommand review)
         {
             try
             {

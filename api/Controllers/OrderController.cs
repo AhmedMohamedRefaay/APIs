@@ -47,7 +47,7 @@ namespace api.Controllers
             {
                return Ok(await mediator.Send(new CreateOrderCommand
                (query.orderItem,
-               query.CardId,
+              
                query.UserID,
                query.ShippingPrice,
                query.Tax,

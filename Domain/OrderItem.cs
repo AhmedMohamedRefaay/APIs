@@ -13,8 +13,8 @@ namespace Domain
         public int Quantity { get; set; }
 
 
-        [ForeignKey("Order")]
-        public int? OrderID { get; set; }
+        //[ForeignKey("Order")]
+        //public int? OrderID { get; set; }
         [ForeignKey("Product")]
         public long? ProductID { get; set; }
 
@@ -22,7 +22,7 @@ namespace Domain
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
-        public virtual Order? Order { get; set; }
+        public virtual List<Order>? Order { get; set; }
         public virtual Product? Product { get; set; }
 
     }

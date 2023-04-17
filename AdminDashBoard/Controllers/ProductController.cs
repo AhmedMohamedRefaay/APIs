@@ -10,6 +10,7 @@ using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using AdminSiteUseMVC.Services.Abstract;
 
 namespace AdminDashBoard.Controllers
 {
@@ -17,10 +18,13 @@ namespace AdminDashBoard.Controllers
     public class ProductController : Controller
     {
         private readonly DBContext dBContext;
-        
-        public ProductController(DBContext _dBContext)
+        private readonly IImageServices _imageServices;
+
+
+        public ProductController(DBContext _dBContext,  IImageServices imageServices)
         {
             dBContext = _dBContext;
+            _imageServices = imageServices;
             
         }
         private readonly HttpClient _httpClient = new HttpClient();
@@ -96,27 +100,30 @@ namespace AdminDashBoard.Controllers
                 ViewBag.name = User.Identity.Name;
             }
 
-            var file = product.Images;
-            if (file == null || file.Length == 0)
-                return BadRequest("Please select an image");
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            //var file = product.Images;
+            //if (file == null || file.Length == 0)
+            //    return BadRequest("Please select an image");
+            //var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
-            //category.ImagePath = ImageFullPath;
-            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
-            if (!System.IO.Directory.Exists(imagePath))
-            {
-                System.IO.Directory.CreateDirectory(imagePath);
-            }
+            ////category.ImagePath = ImageFullPath;
+            //string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            //string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
+            //if (!System.IO.Directory.Exists(imagePath))
+            //{
+            //    System.IO.Directory.CreateDirectory(imagePath);
+            //}
 
-            var filePath = Path.Combine(imagePath, fileName);
+            //var filePath = Path.Combine(imagePath, fileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            product.ImagePath = $"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}";
-            //  var category = dBContext.Categories.Where(e => e.Id == product.CategoryId).FirstOrDefault();
+            //using (var stream = new FileStream(filePath, FileMode.Create))
+            //{
+            //    await file.CopyToAsync(stream);
+            //}
+            //product.ImagePath = $"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}";
+            ////  var category = dBContext.Categories.Where(e => e.Id == product.CategoryId).FirstOrDefault();
+
+            var url = await _imageServices.UploadImageToAzure(product.Images);
+            product.ImagePath = url;
 
             var min = new Domain.Product()
             {

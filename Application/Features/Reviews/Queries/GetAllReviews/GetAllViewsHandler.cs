@@ -32,8 +32,10 @@ namespace Application.Features.Reviews.Queries.GetAllQuery
                Comment= e.Comment,
                Rate= e.Rate,
                Date= e.Date,
-             
-               
+               userId = e.UserId,
+               productId = e.ProductId,
+
+
            });
              
 

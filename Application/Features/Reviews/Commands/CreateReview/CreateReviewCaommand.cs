@@ -8,12 +8,12 @@ using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Features.Reviews.Commands.CreateProduct
+namespace Application.Features.Reviews.Commands.CreateReview
 {
     public class CreateReviewCaommand:IRequest<bool>
     {
         public int Id { get; set; }
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
         public int Rate { get; set; }
         public DateTime Date { get; set; }
         public int userId { get; set; }

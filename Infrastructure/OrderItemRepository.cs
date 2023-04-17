@@ -43,7 +43,7 @@ namespace Infrastructure
         {
             OrderItem OldOrder_Items = Get(Id);
             OldOrder_Items.Quantity = Order_Items.Quantity;
-            OldOrder_Items.OrderID = Order_Items.OrderID;
+         //   OldOrder_Items.OrderID = Order_Items.OrderID;
             OldOrder_Items.ProductID = Order_Items.ProductID;
 
             OldOrder_Items.UpdatedAt = DateTime.Now;

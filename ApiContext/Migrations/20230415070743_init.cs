@@ -182,33 +182,27 @@ namespace ApiContext.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Card",
+                name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PayementType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    arabicPayementType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    arabicProvider = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HolderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpMonth = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cvc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccountNo = table.Column<int>(type: "int", nullable: true),
-                    Expiry = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    DateOrder = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserID = table.Column<int>(type: "int", nullable: true),
+                    ShippingPrice = table.Column<float>(type: "real", nullable: true),
+                    Tax = table.Column<float>(type: "real", nullable: true),
+                    Total = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Card", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Card_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Orders_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -256,36 +250,6 @@ namespace ApiContext.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DateOrder = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserID = table.Column<int>(type: "int", nullable: true),
-                    CardId = table.Column<int>(type: "int", nullable: true),
-                    ShippingPrice = table.Column<float>(type: "real", nullable: true),
-                    Tax = table.Column<float>(type: "real", nullable: true),
-                    Total = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Orders_Card_CardId",
-                        column: x => x.CardId,
-                        principalTable: "Card",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -325,7 +289,6 @@ namespace ApiContext.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    OrderID = table.Column<int>(type: "int", nullable: true),
                     ProductID = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -334,12 +297,6 @@ namespace ApiContext.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_orderItems", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_orderItems_Orders_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_orderItems_Products_ProductID",
                         column: x => x.ProductID,
@@ -374,6 +331,30 @@ namespace ApiContext.Migrations
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderOrderItem",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    OrderItemsID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderOrderItem", x => new { x.OrderId, x.OrderItemsID });
+                    table.ForeignKey(
+                        name: "FK_OrderOrderItem_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderOrderItem_orderItems_OrderItemsID",
+                        column: x => x.OrderItemsID,
+                        principalTable: "orderItems",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -417,19 +398,9 @@ namespace ApiContext.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Card_UserId",
-                table: "Card",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Categories_parentId",
                 table: "Categories",
                 column: "parentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_orderItems_OrderID",
-                table: "orderItems",
-                column: "OrderID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orderItems_ProductID",
@@ -439,9 +410,9 @@ namespace ApiContext.Migrations
                 filter: "[ProductID] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CardId",
-                table: "Orders",
-                column: "CardId");
+                name: "IX_OrderOrderItem_OrderItemsID",
+                table: "OrderOrderItem",
+                column: "OrderItemsID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserID",
@@ -479,16 +450,16 @@ namespace ApiContext.Migrations
                 column: "UserID");
 
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] {  "Name", "NormalizedName", "ConcurrencyStamp" },
-                values: new object[] {  "User", "User".ToUpper(), Guid.NewGuid().ToString() }
+              table: "AspNetRoles",
+              columns: new[] { "Name", "NormalizedName", "ConcurrencyStamp" },
+              values: new object[] { "User", "User".ToUpper(), Guid.NewGuid().ToString() }
 
-                );
+              );
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Name", "NormalizedName", "ConcurrencyStamp" },
-                values: new object[] {  "Admin", "Admin".ToUpper(), Guid.NewGuid().ToString() }
+                values: new object[] { "Admin", "Admin".ToUpper(), Guid.NewGuid().ToString() }
 
                 );
         }
@@ -512,7 +483,7 @@ namespace ApiContext.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "orderItems");
+                name: "OrderOrderItem");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -524,13 +495,13 @@ namespace ApiContext.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "orderItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Card");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -540,7 +511,6 @@ namespace ApiContext.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
             migrationBuilder.Sql("deete from [AspNetRoles]");
         }
     }

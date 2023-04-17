@@ -40,7 +40,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
             order.DateOrder = request.DateOrder;
             order.Tax = request.Tax;
             order.ShippingPrice = request.ShippingPrice;
-            order.CardId = request.CardId;
+           // order.CardId = request.CardId;
             order.UserID = request.UserID;
             order.Total = request.Total;
             order.OrderStatus = request.OrderStatus;    

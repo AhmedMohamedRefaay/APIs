@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace AdminSiteUseMVC.Controllers.Admin.AdminDetails
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
 
     public class AdminController : Controller
     {

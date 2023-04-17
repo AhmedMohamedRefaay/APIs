@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiContext.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20230408214526_init")]
+    [Migration("20230415070743_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -24,57 +24,6 @@ namespace ApiContext.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Card", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AccountNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CardNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cvc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExpMonth")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExpYear")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Expiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("HolderName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PayementType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Provider")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("arabicPayementType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("arabicProvider")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Card");
-                });
 
             modelBuilder.Entity("Domain.Category", b =>
                 {
@@ -113,9 +62,6 @@ namespace ApiContext.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CardId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("DateOrder")
                         .HasColumnType("datetime2");
 
@@ -139,8 +85,6 @@ namespace ApiContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CardId");
-
                     b.HasIndex("UserID");
 
                     b.ToTable("Orders");
@@ -160,9 +104,6 @@ namespace ApiContext.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrderID")
-                        .HasColumnType("int");
-
                     b.Property<long?>("ProductID")
                         .HasColumnType("bigint");
 
@@ -173,8 +114,6 @@ namespace ApiContext.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("OrderID");
 
                     b.HasIndex("ProductID")
                         .IsUnique()
@@ -493,6 +432,21 @@ namespace ApiContext.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("OrderOrderItem", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderItemsID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId", "OrderItemsID");
+
+                    b.HasIndex("OrderItemsID");
+
+                    b.ToTable("OrderOrderItem");
+                });
+
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.Property<int>("RolesId")
@@ -508,17 +462,6 @@ namespace ApiContext.Migrations
                     b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("Domain.Card", b =>
-                {
-                    b.HasOne("Domain.User", "user")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("Domain.Category", b =>
                 {
                     b.HasOne("Domain.Category", "ParentCategory")
@@ -530,32 +473,19 @@ namespace ApiContext.Migrations
 
             modelBuilder.Entity("Domain.Order", b =>
                 {
-                    b.HasOne("Domain.Card", "Card")
-                        .WithMany()
-                        .HasForeignKey("CardId");
-
                     b.HasOne("Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID");
-
-                    b.Navigation("Card");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.OrderItem", b =>
                 {
-                    b.HasOne("Domain.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Domain.Product", "Product")
                         .WithOne()
                         .HasForeignKey("Domain.OrderItem", "ProductID")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -656,6 +586,21 @@ namespace ApiContext.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OrderOrderItem", b =>
+                {
+                    b.HasOne("Domain.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.OrderItem", null)
+                        .WithMany()
+                        .HasForeignKey("OrderItemsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.HasOne("Domain.Role", null)
@@ -676,11 +621,6 @@ namespace ApiContext.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("Subcategories");
-                });
-
-            modelBuilder.Entity("Domain.Order", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Domain.WishList", b =>

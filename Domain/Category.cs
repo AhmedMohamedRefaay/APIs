@@ -24,8 +24,6 @@ namespace Domain
         private IList<Product> products;
         public IEnumerable<Product> Products { get { return products; } }
         [Required]
-        
-       
         public string ImagePath{set; get;}
 
         public Category() { }

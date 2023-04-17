@@ -28,10 +28,10 @@ namespace ApiContext
        .WithOne(s => s.category).HasForeignKey(p=>p.CategoryId)
        .OnDelete(DeleteBehavior.Cascade);
 
-      modelBuilder.Entity<Order>()
-     .HasMany<OrderItem>(g => g.OrderItems)
-     .WithOne(s => s.Order)
-     .OnDelete(DeleteBehavior.Cascade);
+     // modelBuilder.Entity<Order>()
+     //.HasMany<OrderItem>(g => g.OrderItems)
+     //.WithOne(s => s.Order)
+     //.OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
   .HasOne<OrderItem>()
@@ -43,9 +43,7 @@ namespace ApiContext
         public DbSet<Product> Products { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Order> Orders { get; set; }
-
         public DbSet<OrderItem> orderItems { get; set; }
-
         public DbSet<WishList> WishList { get; set; }
 
 

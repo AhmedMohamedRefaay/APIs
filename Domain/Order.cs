@@ -20,15 +20,11 @@ namespace Domain
         [ForeignKey("User")]
         public int? UserID { get; set; }
 
-        [ForeignKey("Card")]
-        public int? CardId { set; get; }
+       
         public float? ShippingPrice { get; set; }
 
         public float? Tax { get; set; }
         public virtual User? User { get; set; }
-
-        public virtual Card? Card { set; get; }
-      
         public int? Total { set; get; }
         private List<OrderItem> OrderItem { set; get; }
 

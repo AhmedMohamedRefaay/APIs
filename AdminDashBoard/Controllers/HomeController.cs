@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace AdminDashBoard.Controllers
 {
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
 
     public class HomeController : Controller
     {

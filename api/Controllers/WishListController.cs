@@ -13,7 +13,7 @@ namespace api.Controllers
     {
         private readonly DBContext _Context;
         private readonly IWishListRepository _wishList;
-
+        
         public WishListController(DBContext context,IWishListRepository wishList)
         {
             _Context = context;
@@ -50,14 +50,17 @@ namespace api.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetWishList(int Id)
         {
-            
-          var wishlist= await _wishList.GetByIdAsyc(Id);
+            var wishlist = await _Context.WishList.Include(a=>a.products).Where(a=> a.UserID==Id).FirstOrDefaultAsync();
+          //var wishlist= await _wishList.GetByIdAsyc(Id);
 
             if (wishlist != null)
                 return Ok(wishlist);
             return NotFound("WishList Not Found");
             
         }
+
+
+
         [HttpPost]
         public   async Task<IActionResult> AddProduct([FromBody]WishListDTO wishList)
         {

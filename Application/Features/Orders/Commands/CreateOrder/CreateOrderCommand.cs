@@ -14,7 +14,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
   
              public  List<OrderItem> orderItem { get; set; }
 
-             public int? CardId { set; get; }
+           //  public int? CardId { set; get; }
 
              public int? UserID { set; get; }
           
@@ -33,19 +33,18 @@ namespace Application.Features.Orders.Commands.CreateOrder
 
         public CreateOrderCommand() { }
 
-        public CreateOrderCommand(List<OrderItem> orderItem, int? CardId, int? UserID, 
+        public CreateOrderCommand(List<OrderItem> orderItem,  int? UserID, 
           float? ShippingPrice, float? Tax, int? Total
             )
         {
             this.orderItem = orderItem;
-            this.CardId = CardId;
+          //  this.CardId = CardId;
             this.UserID = UserID;
             this.ShippingPrice = ShippingPrice;
             this.Tax = Tax;
             this.DeliveryDate = DateTime.Now.AddDays(3);
             DateOrder = DateTime.Now;
             this.OrderStatus = "Pending";
-           
             this.Total = Total;
         }
     }

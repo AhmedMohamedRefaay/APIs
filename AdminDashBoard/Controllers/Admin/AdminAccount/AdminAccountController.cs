@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdminSiteUseMVC.Controllers.Admin.AdminAccount
 {
+   // [Authorize]
     public class AdminAccountController : Controller
     {
         private readonly UserManager<User> _adminManager;
@@ -20,7 +21,7 @@ namespace AdminSiteUseMVC.Controllers.Admin.AdminAccount
             _roleManager = roleManager;
             _signInManager = signInManager;
         }
-        [Authorize]
+       // [Authorize(Roles ="Admin")]
         public string GetString()
         {
             return "Ok";
@@ -67,16 +68,16 @@ namespace AdminSiteUseMVC.Controllers.Admin.AdminAccount
                await _signInManager.SignInAsync(_user, true);
 
                 await _adminManager.AddToRoleAsync(_user, "Admin");
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("LogIN","AdminAccount");
+               // return RedirectToAction("Index", "Home");
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError(" ", ex.Message);
                 return View(registrationModel);
             }
         }
-      
         [HttpGet]
         public IActionResult LogIN()
         {

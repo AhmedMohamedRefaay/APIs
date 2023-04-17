@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Azure.Core;
 using AdminDashBoard.Models;
+using System.Drawing.Drawing2D;
+using AdminSiteUseMVC.Services.Abstract;
 
 namespace AdminDashBoard.Controllers
 {
@@ -19,10 +21,12 @@ namespace AdminDashBoard.Controllers
 
         private readonly DBContext dBContext;
         private readonly IWebHostEnvironment _environment;
-        public CategoryController(DBContext _dBContext,IWebHostEnvironment environment)
+        private readonly IImageServices _imageServices;
+        public CategoryController(DBContext _dBContext,IWebHostEnvironment environment, IImageServices imageServices)
         {
             dBContext = _dBContext;
             _environment = environment;
+            _imageServices = imageServices;
         }
 
         [HttpGet]
@@ -83,32 +87,33 @@ namespace AdminDashBoard.Controllers
         public async Task<ActionResult> Create(Models.Category category)
         {
 
-            var file = category.Images;
-            if (file == null || file.Length == 0)
-                return BadRequest("Please select an image");
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            //var file = category.Images;
+            //if (file == null || file.Length == 0)
+            //    return BadRequest("Please select an image");
+            //var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
-            //category.ImagePath = ImageFullPath;
-            string currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
-            if (!System.IO.Directory.Exists(imagePath))
-            {
-                System.IO.Directory.CreateDirectory(imagePath);
-            }
+            ////category.ImagePath = ImageFullPath;
+            //string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            //string imagePath = System.IO.Path.Combine(currentDirectory, "CategoryImages");
+            //if (!System.IO.Directory.Exists(imagePath))
+            //{
+            //    System.IO.Directory.CreateDirectory(imagePath);
+            //}
 
-            var filePath = Path.Combine(imagePath, fileName);
+            //var filePath = Path.Combine(imagePath, fileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
+            //using (var stream = new FileStream(filePath, FileMode.Create))
+            //{
+            //    await file.CopyToAsync(stream);
+            //}
+            var url = await _imageServices.UploadImageToAzure(category.Images);
+            category.ImagePath = url;
 
             var min = new Domain.Category()
             {
                 Name = category.Name,
                 NameArabic = category.NameArabic,
-                ImagePath =$"http://ahmedrefaay-001-site1.ctempurl.com/AdminDashBoard/CategoryImages/{fileName}",
+                ImagePath =category.ImagePath,
                 parentId = category.ParentCategory
             };
 

@@ -1,5 +1,8 @@
 using AdminDashBoard.Models.IRepository.Admin;
 using AdminDashBoard.Models.Services.Admin;
+using AdminSiteUseMVC.Options;
+using AdminSiteUseMVC.Services.Abstract;
+using AdminSiteUseMVC.Services.Concrete;
 using ApiContext;
 using Domain;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -46,6 +49,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
     options.SlidingExpiration = true;
 });
+
+ builder.Services.Configure<AzureOptions>(builder.Configuration.GetSection("Azure"));
+ builder.Services.AddTransient<IImageServices, ImageServices>();
 
 
 
